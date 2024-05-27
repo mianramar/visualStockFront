@@ -1,0 +1,19 @@
+{
+  "usuarios": [
+    {
+      "usuario": "admin",
+      "contrasinal": "abc123..",
+      "rol": "administrador"
+    },
+    {
+      "usuario": "miguel",
+      "contrasinal": "abc123..",
+      "rol": "normal"
+    },
+    {
+      "usuario": "bali",
+      "contrasinal": "abc123..",
+      "rol": "normal"
+    }
+  ]
+}

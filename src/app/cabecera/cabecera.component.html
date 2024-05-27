@@ -1,0 +1,10 @@
+<!-- La cabecera solo estará formada por el titulo, un subtitulo y el usuario que mostrará el usuario logueado -->
+<div id='cab1'>
+    <h1>VISUAL STOCK -</h1>
+    <h2>Gestión de Almacenes</h2>
+</div>
+<div id='cab2' >
+    <span *ngIf="usuarioCabecera.usuario && usuarioCabecera.usuario!= '' ">usuario: {{ usuarioCabecera.usuario }}</span>
+    <button id="logout" (click) = "desconectar()">Desconectar</button>
+</div>
+

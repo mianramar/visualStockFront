@@ -1,0 +1,6 @@
+<div class="contenedorMenu"><!--Dependiendo de en cual se haga click, el selector cambiará al seleccionado-->
+    <div class="seccion" id="almacen" (click)="navegarAlmacen()" [ngClass]="{'seleccionado': selector == 'A'}">Almacén</div>
+    <div class="seccion" id="entradas" (click)="navegarEntradas()" [ngClass]="{'seleccionado': selector == 'E'}">Entradas</div>
+    <div class="seccion" id="produccion" (click)="navegarProduccion()" [ngClass]="{'seleccionado': selector == 'P'}">Producción</div>
+    <div class="seccion" id="salidas" (click)="navegarSalidas()" [ngClass]="{'seleccionado': selector == 'S'}">Salidas</div>
+</div>

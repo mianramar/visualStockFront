@@ -1,0 +1,13 @@
+/* Estilos botón */
+#admin {
+    height: 30px;
+    border-radius: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 30px;
+    background-color: rgb(255, 255, 255);
+    border: none;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+    cursor:pointer; /*cambiar el cursor*/
+}

@@ -1,0 +1,14 @@
+<!-- En este componente llamamos al resto de componentes, dentro de contenedores a los cuales les aplicaremos los estilos css que deseemos-->
+<div id="contenedorXeral">   
+    <div id="contenedorCabecera">
+        <app-cabecera style="display: flex;
+        flex-direction: row; justify-content: space-between; width: 90%;"></app-cabecera>
+    </div>
+    <div id="contenedorContenido">
+        <!-- Aqui llamamos al router outlet, para poder acceder a las rutas -->
+        <router-outlet></router-outlet>
+    </div>
+    <div id="contenedorPie">
+        <app-pie></app-pie>
+    </div>
+</div> 

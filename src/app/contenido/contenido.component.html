@@ -1,0 +1,21 @@
+<!-- Botón para redireccionar al panel de administración (solo aparece si el usuario logueado es administrador) -->
+<button id="admin" *ngIf="usuarioParseado && usuarioParseado.rol === 'administrador'" (click) = "navegarAdministracion()">Administración</button>
+
+<!-- Introducimos un contenedor que tendrá el flex para ordenar los elementos -->
+<div id="contenido"> 
+  
+  <!-- Los departamentos van a ser botones con una imagen identificativa de cada uno -->
+  <button class="departamento" [style.background-image]="'url(../assets/img/almacen.jpg)'" (click)="navegarAlmacen()">
+    <span id="texto">Almacén</span>
+  </button>
+  <button class="departamento" [style.background-image]="'url(../assets/img/entradas.jpg)'" (click)="navegarEntradas()">
+    <span id="texto">Entradas</span>
+  </button>
+  <button class="departamento" [style.background-image]="'url(../assets/img/produccion.jpg)'" (click)="navegarProduccion()">
+    <span id="texto">Producción</span>
+  </button>
+  <button class="departamento" [style.background-image]="'url(../assets/img/salidas.jpg)'" (click)="navegarSalidas()">
+    <span id="texto">Salidas</span>
+  </button>
+  
+</div>

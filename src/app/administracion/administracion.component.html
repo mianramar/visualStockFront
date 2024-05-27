@@ -1,0 +1,56 @@
+<!-- Botón de nuevo usuario -->
+<div id="nuevoUsuario" *ngIf="mostrarUsuarios"> <!-- Ocultamos el boton si no está en mostrarUsuarios -->
+    <button (click)= "mostrarFormularioCrear()" id="nu" >Nuevo usuario</button>
+    <button (click) = "navegarPortada()" id="bportada">Volver a Portada</button>
+</div>
+<!-- Tabla de usuarios -->
+<table id="usuariosExistentes" *ngIf="mostrarUsuarios"> <!-- Si mostrarUsuarios es true -->
+    <thead>
+        <tr class="lineaTabla"> <!-- headers -->
+            <th>Usuario</th>
+            <th>Contraseña</th>
+            <th>Rol</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>  
+        <tr class="lineaTabla" *ngFor="let usuario of listaxeUsuarios"> <!-- una fila por cada usuario -->
+            <td>{{ usuario.usuario }}</td>
+            <td>{{ usuario.contrasinal }}</td>
+            <td>{{ usuario.rol }}</td>
+            <td><button (click)="mostrarFormularioEditar(usuario)">Editar</button></td>
+            <td><button (click)="borrarUsuario(usuario)">Eliminar</button></td>
+        </tr>
+    </tbody>  
+</table>
+<!-- Usaremos un mismo formulario para nuevos usuarios o editar usuarios ya existentes, según accedamos por nuevo usuario o editar, cambiará de características-->
+<div id="contenedorFormularioUsuarios" *ngIf="!mostrarUsuarios">  <!-- Si mostrarUsuario es falso -->
+
+    <form [formGroup]="formularioUsuario" (ngSubmit)="editar ? modificarUsuario() : nuevoUsuario()"> <!-- Si editar es true, se ejecutará la función editar, sino la de nuevoUsuario -->
+
+        <h1>{{ editar ? 'Editar Usuario' : 'Nuevo Usuario' }}</h1> <!-- Para cambiar el titulo segun editar/nuevo -->
+        <div *ngIf="mensajeError != null" style="color:red"><!-- Si el campo usuario ya existe, mostramos el mensaje en rojo -->
+            <p>{{ mensajeError }}</p>
+        </div>
+        <!-- Campo nome -->
+        <label for="usuario">Usuario:</label>
+        <input type="text" class="controlFormulario" formControlName="usuario">
+        
+        <!-- Campo contrasinal -->
+        <label for="contrasinal">Contraseña:</label>
+        <input type="text" class="controlFormulario" formControlName="contrasinal">
+        
+        <!-- Campo rol -->
+        <label for="rol">Rol:</label>
+        <input type="text" class="controlFormulario" formControlName="rol">
+
+        <!-- Botón submit -->
+        <button type="submit">Guardar</button>
+    </form> 
+
+    
+    <!-- Botón para cancelar y volver a la tabla de usuarios y reseteamos el mensaje de error a null -->
+    <button (click)="mostrarUsuarios=!mostrarUsuarios; mensajeError = null" id="cancelar">Cancelar</button>
+
+</div>  

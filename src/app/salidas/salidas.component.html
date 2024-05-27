@@ -1,0 +1,66 @@
+<app-menu [selector]="'S'" style="display: flex; justify-content: center; align-items: center;"></app-menu> <!--Para el input de menucomponent-->
+<!-- Botón de nuevo salida -->
+<div id="nuevoSalida" *ngIf="mostrarSalidas"> <!-- Ocultamos el boton si no está en mostrarSalidas -->
+    <div id="botones">
+        <button (click)="mostrarFormularioCrear()" id="ne" >Registrar nueva salida</button>
+        <button (click) = "navegarPortada()" id="bportada">Volver a Portada</button>
+    </div>
+</div>
+<!-- Tabla de salidas -->
+<div id="tablaSalidas" *ngIf="mostrarSalidas">
+<table id="salidasExistentes" >
+    <thead>
+        <tr class="lineaTabla"> <!-- cabeceras -->
+            <th>Numero</th>
+            <th>Empresa</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>  
+        <tr class="lineaTabla" *ngFor="let salida of listaxeSalidas" [ngClass]="{'isEliminado': salida.isEliminado}"> <!-- una fila por cada salida -->
+            <td>{{ salida.numero }}</td>
+            <td>{{ salida.empresa }}</td>
+            <td>{{ salida.fecha }}</td>
+            <td>{{ salida.total }}</td>
+            <td><button (click)="eliminarAlbaran(salida.numero)">Eliminar</button></td>
+        </tr>
+    </tbody>  
+</table>
+</div>
+<!-- Usaremos un mismo formulario para nuevos salidas o editar salidas ya existentes, según accedamos por nuevo salida o editar, cambiará de características-->
+<div id="contenedorFormularioSalidas" *ngIf="!mostrarSalidas">  <!-- Si mostrarSalida es falso -->
+
+    <form [formGroup]="formularioSalida" (ngSubmit)="nuevaSalida()"> 
+
+        <h1>Nueva salida</h1>
+        <div id="campos">
+            <div *ngIf="mensajeError != null" style="color:red"><!-- Se o campo numero ya existe, amosamos a mensaxe en vermello -->
+                <p>{{ mensajeError }}</p>
+            </div>
+            <!-- Campo numero -->
+            <label for="numero">Numero:</label>
+            <input type="text" class="controlFormulario" formControlName="numero">
+            
+            <!-- Campo empresa -->
+            <label for="empresa">Empresa:</label>
+            <input type="text" class="controlFormulario" formControlName="empresa">
+            
+            <!-- Campo fecha -->
+            <label for="fecha">Fecha:</label>
+            <input type="date" class="controlFormulario" formControlName="fecha">
+
+            <!-- Campo total -->
+            <label for="total">Total:</label>
+            <input type="text" class="controlFormulario" formControlName="total">
+        </div>
+        <!-- Botón submit -->
+        <button type="submit" id="submit">Guardar</button>
+    </form> 
+
+    
+    <!-- Botón para cancelar y volver a la tabla de salidas y reseteamos el mensaje de error a null -->
+    <button (click)="mostrarSalidas=!mostrarSalidas; mensajeError = null" id="cancelar">Cancelar</button>
+
+</div>  

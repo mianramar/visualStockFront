@@ -1,0 +1,22 @@
+<div id="contenedorForm">  
+    <form [formGroup]="formularioLogin" (ngSubmit)="login()">
+        <h1>Introduzca sus credenciales</h1>
+
+        <!-- Se existe un erro, amosamos a mensaxe -->
+        <div *ngIf="mensajeError != null" style="color:red">
+            <p>{{ mensajeError }}</p>
+        </div>
+        
+        <!-- Campo nome -->
+        <label for="usuario">Usuario:</label>
+        <input type="text" class="controlFormulario" formControlName="usuario">
+        
+        <!-- Campo contrasinal -->
+        <label for="contrasinal">Contraseña:</label>
+        <input type="password" class="controlFormulario" formControlName="contrasinal">
+
+        <!-- Botón submit -->
+        <button type="submit" >Entrar</button>
+    </form>
+    
+</div> 

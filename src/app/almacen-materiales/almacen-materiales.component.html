@@ -1,0 +1,33 @@
+<app-menu [selector]="'A'" style="display: flex; justify-content: center; align-items: center;"></app-menu><!--Para el input de menucomponent-->
+<div id="almacen">
+    <div id="almacentitulo">
+        <div id="botones"> <!-- Botones de navegación -->
+            <button  (click) = "navegarProductos()">Ver Almacén de Productos</button>
+            <button (click) = "navegarPortada()">Volver a Portada</button>
+        </div>
+        <div id="tablaalmacen">
+            <!-- Tabla de materiales -->
+            <table > 
+                <thead>
+                    <tr class="lineaTabla"> <!-- headers -->
+                        <th>ID</th>
+                        <th>Material</th>
+                        <th>Fecha Entrada</th>
+                        <th>Dimensiones</th>
+                        <th>Cantidad Disponible</th>
+                    </tr>
+                </thead>
+                <tbody>  
+                    <tr class="lineaTabla" *ngFor="let material of listaxeMateriales">  <!--una fila por cada material -->
+                        <td>{{ material.id }}</td>
+                        <td>{{ material.metal }}</td>
+                        <td>{{ material.fecha_entrada }}</td>
+                        <td>{{ material.dimensiones }}</td>
+                        <td>{{ material.cantidad_disponible }}</td>
+                    </tr>
+                </tbody>  
+            </table>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,20 @@
+{
+"departamentos": [
+    {
+        "nome": "Almacén",
+        "imagen": "../assets/img/almacen.jpg" 
+    },
+    {
+        "nome": "Entradas",
+        "imagen": "../assets/img/entradas.jpg" 
+    },
+    {
+        "nome": "Produccion",
+        "imagen": "../assets/img/produccion.jpg" 
+    },
+    {
+        "nome": "Salidas",
+        "imagen": "../assets/img/salidas.jpg" 
+    }
+]
+}    

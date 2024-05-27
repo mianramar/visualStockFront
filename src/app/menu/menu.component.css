@@ -1,0 +1,22 @@
+.contenedorMenu { 
+    display: flex;
+    max-width: 500px;
+}
+
+.seccion { /*para las secciones del menu */
+    flex: 1;
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding:20px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+/*cambios de color por seleccionado o si pasamos por encima*/
+.seleccionado{
+    background-color: #333;
+}
+.seccion:hover {
+    background-color: #333;
+}

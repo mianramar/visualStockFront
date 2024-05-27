@@ -1,0 +1,33 @@
+<app-menu [selector]="'A'" style="display: flex; justify-content: center; align-items: center;"></app-menu> <!--Para el input de menucomponent-->
+<div id="almacen">
+    <div id="almacentitulo">
+        <div id="botones"> <!-- Botones de navegación -->
+            <button  (click) = "navegarMateriales()">Ver Almacén de Materiales</button>
+            <button (click) = "navegarPortada()">Volver a Portada</button>
+        </div>
+        <div id="tablaalmacenProductos">
+            <!-- Tabla de materiales -->
+            <table > 
+                <thead>
+                    <tr class="lineaTabla"> <!-- cabeceras -->
+                        <th>ID</th>
+                        <th>Producto</th>
+                        <th>Fecha Alta</th>
+                        <th>Tipo</th>
+                        <th>Cantidad Disponible</th>
+                    </tr>
+                </thead>
+                <tbody>  
+                    <tr class="lineaTabla" *ngFor="let producto of listaxeProductos">  <!--una fila por cada producto -->
+                        <td>{{ producto.id }}</td>
+                        <td>{{ producto.nombre }}</td>
+                        <td>{{ producto.fecha_alta | date : 'dd/MM/yyyy'}}</td> <!-- Para que nos lo de en el formato requetrido -->
+                        <td>{{ producto.tipo }}</td>
+                        <td>{{ producto.cantidad_disponible }}</td>
+                    </tr>
+                </tbody>  
+            </table>
+        </div>
+    </div>
+
+</div>

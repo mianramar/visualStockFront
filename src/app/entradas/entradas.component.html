@@ -1,0 +1,66 @@
+<app-menu [selector]="'E'" style="display: flex; justify-content: center; align-items: center;"></app-menu> <!--Para el input de menucomponent-->
+<!-- Botón de nuevo entrada -->
+<div id="nuevoEntrada" *ngIf="mostrarEntradas"> <!-- Ocultamos el boton si no está en mostrarEntradas -->
+    <div id="botones">
+        <button (click)="mostrarFormularioCrear()" id="ne" >Registrar nueva entrada</button>
+        <button (click) = "navegarPortada()" id="bportada">Volver a Portada</button>
+    </div>
+</div>
+<!-- Tabla de entradas -->
+<div id="tablaEntradas" *ngIf="mostrarEntradas">
+<table id="entradasExistentes" >
+    <thead>
+        <tr class="lineaTabla"> <!-- cabeceras -->
+            <th>Numero</th>
+            <th>Empresa</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>  
+        <tr class="lineaTabla" *ngFor="let entrada of listaxeEntradas" [ngClass]="{'isEliminado': entrada.isEliminado}"> <!-- una fila por cada entrada -->
+            <td>{{ entrada.numero }}</td>
+            <td>{{ entrada.empresa }}</td>
+            <td>{{ entrada.fecha }}</td>
+            <td>{{ entrada.total }}</td>
+            <td><button (click)="eliminarAlbaran(entrada.numero)">Eliminar</button></td>
+        </tr>
+    </tbody>  
+</table>
+</div>
+<!-- Usaremos un mismo formulario para nuevos entradas o editar entradas ya existentes, según accedamos por nuevo entrada o editar, cambiará de características-->
+<div id="contenedorFormularioEntradas" *ngIf="!mostrarEntradas">  <!-- Si mostrarEntrada es falso -->
+
+    <form [formGroup]="formularioEntrada" (ngSubmit)="nuevaEntrada()"> <!-- Función nuevoEntrada -->
+
+        <h1>Nueva entrada</h1> 
+        <div id="campos">
+            <div *ngIf="mensajeError != null" style="color:red"><!-- Se o campo numero ya existe, amosamos a mensaxe en vermello -->
+                <p>{{ mensajeError }}</p>
+            </div>
+            <!-- Campo numero -->
+            <label for="numero">Numero:</label>
+            <input type="text" class="controlFormulario" formControlName="numero">
+            
+            <!-- Campo empresa -->
+            <label for="empresa">Empresa:</label>
+            <input type="text" class="controlFormulario" formControlName="empresa">
+            
+            <!-- Campo fecha -->
+            <label for="fecha">Fecha:</label>
+            <input type="date" class="controlFormulario" formControlName="fecha">
+
+            <!-- Campo total -->
+            <label for="total">Total:</label>
+            <input type="text" class="controlFormulario" formControlName="total">
+        </div>
+        <!-- Botón submit -->
+        <button type="submit" id="submit">Guardar</button>
+    </form> 
+
+    
+    <!-- Botón para cancelar y volver a la tabla de entradas y reseteamos el mensaje de error a null -->
+    <button (click)="mostrarEntradas=!mostrarEntradas; mensajeError = null" id="cancelar">Cancelar</button>
+
+</div>  

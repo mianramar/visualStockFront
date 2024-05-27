@@ -1,0 +1,6 @@
+Usuarios: admin - abc123.. - administrador
+	  miguel - abc123.. - normal
+	  bali - abc123.. - normal
+
+El input lo hice para el menú superior y el parámetro si accedemos a productos desde producción al 
+realizar un proceso para que nos lleve al almacén de productos en lugar del de materiales

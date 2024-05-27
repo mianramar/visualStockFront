@@ -1,0 +1,58 @@
+<app-menu [selector]="'P'" style="display: flex; justify-content: center; align-items: center"></app-menu> <!--Para el input de menucomponent-->
+<div id="botones">
+    <button (click) = "navegarPortada()">Volver a Portada</button>
+</div>
+<form #formularioProduccion id="formularioProduccion" >
+<div id="proceso">
+    <div id="consumo">
+        <h3>Materiales</h3>
+        <div id="tablaalmacen" >
+            <!-- Tabla de materiales -->
+            <table > 
+                <thead>
+                    <tr class="lineaTabla"> <!-- cabeceras -->
+                        <th></th>
+                        <th>ID</th>
+                        <th>Metal</th>
+                        <th>Fecha Entrada</th>
+                        <th>Dimensiones</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>  
+                    <tr class="lineaTabla" *ngFor="let material of listaxeMateriales">  <!--una fila por cada material -->
+                        <td><input type="checkbox" [checked]="estaSeleccionado(material)" (change)="toggleMaterialSeleccionado(material)"></td>
+                        <td>{{ material.id }}</td>
+                        <td>{{ material.metal }}</td>
+                        <td>{{ material.fecha_entrada }}</td>
+                        <td>{{ material.dimensiones }}</td>
+                        <input type="text" class="controlFormulario cantidad" id="cantidad{{ material.id }}" name="cantidad{{ material.id }}">                    </tr>
+                </tbody>  
+            </table>
+        </div>
+    </div>
+    <div id="flecha"><img src="assets/img/flecha.PNG" alt=""></div>
+    <div id="resultado">
+        <h3>Producto</h3>
+
+            <!-- Campo nome -->
+            <label for="nombre">Nombre:</label>
+            <input type="text" class="controlFormulario" id="nombre" name="nombre">
+            
+            <!-- Campo tipo -->
+            <label for="tipo">Tipo:</label>
+            <select class="controlFormulario" id="tipo" name="tipo">
+                <option value="Intermedio">Intermedio</option>
+                <option value="Terminado">Terminado</option>
+            </select>
+    
+            <!-- Campo cantidad -->
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" class="controlFormulario" id="cantidad" name="cantidad">
+    
+            <!-- Botón submit -->
+            <button type="button" id="procesar" (click)="consumir(formularioProduccion)">Procesar</button>
+
+    </div>
+</div>
+</form>

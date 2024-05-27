@@ -1,0 +1,94 @@
+/* Estilo tabla */
+#tablaEntradas {
+    overflow-y: scroll;
+    max-height: 450px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    background-color: rgb(255, 255, 255);
+    color: grey;
+}
+
+/* Estilo botones generales */
+button {
+    background-color: rgb(253, 203, 110);
+    color: black;
+    border-radius: 12px;
+    border:none;
+    height:25px;
+    width: 200px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Estilo botones con fondo distinto */
+#ne, #bportada {
+    background-color: black;
+    color: rgb(253, 203, 110);
+}
+
+/*padding de los th y td*/
+th,td {
+    padding: 5px;
+}
+
+/* disposición de la nueva entrada */
+#nuevoEntrada{
+    display:flex;
+    flex-direction: column;
+}
+
+#botones { /*para que los botones esten separados*/
+    display:flex;
+    gap: 10px;
+    margin: 10px;
+    justify-content: space-between;
+}
+
+#almacen {
+    width: 90%;
+    min-width: 400px;
+    height: 50%;
+}
+
+#campos { /* se colocaran en columna*/
+    display:flex;
+    flex-direction: column;
+}
+
+#cancelar {
+    margin: 10px;
+}
+
+#submit {
+    margin: 10px;
+    margin-top: 20px;
+}
+
+th {
+    border-bottom: 2px solid rgb(253, 203, 110);
+}
+
+h2 {
+    font-size: 25px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Estilos formulario entradas */
+#contenedorFormularioEntradas {
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    background-color: rgb(255, 255, 255);
+    color: grey;
+    padding: 30px
+}
+
+input {
+    margin: 10px;
+}
+
+.isEliminado { /*cuando "eliminemos" se volverá de color rojo aplicando esta clase*/
+    color:red;
+}
