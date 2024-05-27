@@ -4,3 +4,5 @@ Usuarios: admin - abc123.. - administrador
 
 El input lo hice para el menú superior y el parámetro si accedemos a productos desde producción al 
 realizar un proceso para que nos lleve al almacén de productos en lugar del de materiales
+
+Cambios del Leeme
