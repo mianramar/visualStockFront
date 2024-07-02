@@ -1,6 +1,7 @@
 {
   "routes": [
     "/administracion",
+    "/almacen",
     "/entradas",
     "/login",
     "/portada",

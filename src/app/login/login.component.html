@@ -3,17 +3,24 @@
         <h1>Introduzca sus credenciales</h1>
 
         <!-- Se existe un erro, amosamos a mensaxe -->
-        <div *ngIf="mensajeError != null" style="color:red">
+        <div *ngIf="mensajeError != null" style="color:red"><!--mensaje de error de validaciones en caso de que haya alguno en rojo-->
             <p>{{ mensajeError }}</p>
         </div>
         
-        <!-- Campo nome -->
-        <label for="usuario">Usuario:</label>
-        <input type="text" class="controlFormulario" formControlName="usuario">
+    <!-- Email -->
+        <label for="email">Email:</label>
+        <input type="text" class="controlFormulario" formControlName="email">
+        <div *ngIf="formularioLogin.get('email').invalid && (formularioLogin.get('email').dirty || formularioLogin.get('email').touched  || formSubmitted)" style="color:red"><!--Validaciones-->
+            <small *ngIf="formularioLogin.get('email').errors?.['required']">Email es requerido.</small>
+            <small *ngIf="formularioLogin.get('email').errors?.['email']">Email no es válido.</small>
+        </div>
         
         <!-- Campo contrasinal -->
-        <label for="contrasinal">Contraseña:</label>
-        <input type="password" class="controlFormulario" formControlName="contrasinal">
+        <label for="password">Contraseña:</label>
+        <input type="password" class="controlFormulario" formControlName="password">
+        <div *ngIf="formularioLogin.get('password').invalid && (formularioLogin.get('password').dirty || formularioLogin.get('password').touched  || formSubmitted)" style="color:red"><!--Validaciones-->
+            <small *ngIf="formularioLogin.get('password').errors?.['required']">Contraseña es requerida.</small>
+        </div>
 
         <!-- Botón submit -->
         <button type="submit" >Entrar</button>

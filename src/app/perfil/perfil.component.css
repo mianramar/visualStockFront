@@ -1,0 +1,50 @@
+#contenedorFormularioUsuarios {
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    background-color: rgb(255, 255, 255);
+    color: grey;
+    min-height: 400px;
+    padding:30px;
+    text-align: center;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+button {
+    height: 30px;
+    width: 150px;
+    font-weight: bold;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: black;
+    color: rgb(253, 203, 110);
+    border-radius: 20px;
+    border-style: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.imagen {
+    margin: 10px;
+}
+
+
+#formUsuario{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.controlFormulario {
+    width: 100%;
+    box-sizing: border-box; /* Asegura que el padding y border se incluyan en el ancho total */
+    padding: 8px; /* Añadir padding para mejor apariencia */
+    margin-bottom: 10px; /* Añadir espacio entre los inputs */
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group {
+    margin-bottom: 15px;
+    width:80%;
+}

@@ -1,66 +1,122 @@
-<app-menu [selector]="'S'" style="display: flex; justify-content: center; align-items: center;"></app-menu> <!--Para el input de menucomponent-->
 <!-- Botón de nuevo salida -->
-<div id="nuevoSalida" *ngIf="mostrarSalidas"> <!-- Ocultamos el boton si no está en mostrarSalidas -->
+<div id="nuevoSalida">
+    <h2>Salidas</h2>
     <div id="botones">
-        <button (click)="mostrarFormularioCrear()" id="ne" >Registrar nueva salida</button>
-        <button (click) = "navegarPortada()" id="bportada">Volver a Portada</button>
+        <button (click)="nuevaSalida()" id="ne" >Registrar nueva salida</button>
     </div>
 </div>
-<!-- Tabla de salidas -->
-<div id="tablaSalidas" *ngIf="mostrarSalidas">
-<table id="salidasExistentes" >
-    <thead>
-        <tr class="lineaTabla"> <!-- cabeceras -->
-            <th>Numero</th>
-            <th>Empresa</th>
-            <th>Fecha</th>
-            <th>Total</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>  
-        <tr class="lineaTabla" *ngFor="let salida of listaxeSalidas" [ngClass]="{'isEliminado': salida.isEliminado}"> <!-- una fila por cada salida -->
-            <td>{{ salida.numero }}</td>
-            <td>{{ salida.empresa }}</td>
-            <td>{{ salida.fecha }}</td>
-            <td>{{ salida.total }}</td>
-            <td><button (click)="eliminarAlbaran(salida.numero)">Eliminar</button></td>
-        </tr>
-    </tbody>  
-</table>
-</div>
-<!-- Usaremos un mismo formulario para nuevos salidas o editar salidas ya existentes, según accedamos por nuevo salida o editar, cambiará de características-->
-<div id="contenedorFormularioSalidas" *ngIf="!mostrarSalidas">  <!-- Si mostrarSalida es falso -->
+<div class="row">
+    <div [ngClass]="{'col-md-12': mostrarSalidas, 'col-md-8': !mostrarSalidas, 'transicion-detalle': true}"><!--pasamos de col12 a 8 dependiendo del flag mostrar salidas-->
+        <!-- Tabla de salidas -->
+        <div id="tablaSalidas">
+            <table class="table table-striped">
+                <thead>
+                    <tr> <!-- headers -->
+                        <th>Número</th>
+                        <th>Fecha</th>
+                        <th>Nombre de Empresa</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>  
+                    <tr *ngFor="let salida of listaxeSalidas"> <!-- una fila por cada salida -->
+                        <td>{{ salida.numero }}</td>
+                        <td>{{ salida.fecha }}</td>
+                        <td>{{ salida.empresa_nome }}</td>
+                        <td>
+                            <button (click)="verDetalle(salida.id)">Ver Detalle</button><!--Iniciamos la transicion para ver el detalle de una salida-->
+                            <button (click)="eliminarSalida(salida.id)">Eliminar</button>
+                        </td>
 
-    <form [formGroup]="formularioSalida" (ngSubmit)="nuevaSalida()"> 
-
-        <h1>Nueva salida</h1>
-        <div id="campos">
-            <div *ngIf="mensajeError != null" style="color:red"><!-- Se o campo numero ya existe, amosamos a mensaxe en vermello -->
-                <p>{{ mensajeError }}</p>
-            </div>
-            <!-- Campo numero -->
-            <label for="numero">Numero:</label>
-            <input type="text" class="controlFormulario" formControlName="numero">
-            
-            <!-- Campo empresa -->
-            <label for="empresa">Empresa:</label>
-            <input type="text" class="controlFormulario" formControlName="empresa">
-            
-            <!-- Campo fecha -->
-            <label for="fecha">Fecha:</label>
-            <input type="date" class="controlFormulario" formControlName="fecha">
-
-            <!-- Campo total -->
-            <label for="total">Total:</label>
-            <input type="text" class="controlFormulario" formControlName="total">
+                    </tr>
+                </tbody>  
+            </table>
         </div>
-        <!-- Botón submit -->
-        <button type="submit" id="submit">Guardar</button>
-    </form> 
+    </div>
+    <div class="col-md-4" *ngIf="mostrarDetalle">
+        <div id="contenedorFormularioSalidas">
+            <form #salidaForm="ngForm">
+                <h1>Detalle Albarán</h1>
+                <div id="campos">
+                    <!-- Campo numero -->
+                    <div class="form-group">
+                        <label for="numero">Numero Albarán:</label>
+                        <input type="text" [(ngModel)]="salidaSeleccionada.numero" name="numero" [disabled]="!editar" required #numero="ngModel">
+                        <div *ngIf="numero.invalid && (numero.dirty || numero.touched)" style="color:red"><!--Validaciones-->
+                            El número de albarán es requerido.
+                        </div>
+                    </div>
+                    <!-- Campo empresa -->
+                    <div class="form-group">
+                        <label for="empresa_nome">Empresa:</label>
+                        <select [(ngModel)]="salidaSeleccionada.empresa_id" name="empresa_id" [disabled]="!editar" required #empresa_id="ngModel">
+                            <option *ngFor="let empresa of listaxeEmpresas" [value]="empresa.id">{{ empresa.nombre }}</option>
+                        </select>
+                        <div *ngIf="empresa_id.invalid && (empresa_id.dirty || empresa_id.touched)" style="color:red"><!--Validaciones-->
+                            La empresa es requerida.
+                        </div>
+                    </div>
+                    <!-- Campo fecha -->
+                    <div class="form-group">
+                        <label for="fecha">Fecha:</label>
+                        <input type="date" [(ngModel)]="salidaSeleccionada.fecha" name="fecha" [disabled]="!editar" required #fecha="ngModel">
+                        <div *ngIf="fecha.invalid && (fecha.dirty || fecha.touched)" style="color:red"><!--Validaciones-->
+                            La fecha es requerida.
+                        </div>
+                    </div>
+                    <!-- Campo tipo -->
+                    <div class="form-group">
+                        <label for="tipo">Tipo de operación:</label>
+                        <input type="text" value="{{salidaSeleccionada.tipo}}" disabled>
+                    </div>
+                    <!-- Campos de productos -->
+                    <div id="tablaProductos">
+                        <h3>Productos</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let producto of salidaSeleccionada.productos">
+                                    <td>{{ producto.nombre }}</td>
+                                    <td>{{ producto.tipo }}</td>
+                                    <td>
+                                        <input type="number" class="input-productos" [id]="'cantidad-' + producto.id" [(ngModel)]="producto.pivot.cantidad" name="producto-cantidad-{{producto.id}}" [disabled]="!editar" required #cantidad="ngModel" min="1">
+                                        <div *ngIf="editar && cantidad.invalid && (cantidad.dirty || cantidad.touched)" style="color:red"><!--Validaciones-->
+                                            La cantidad es requerida y debe ser mayor que 0.
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="input-productos" [id]="'precio-' + producto.id" [(ngModel)]="producto.pivot.precio" name="producto-precio-{{producto.id}}" [disabled]="!editar" required #precio="ngModel" min="0.01" step="0.01">
+                                        <div *ngIf="editar && precio.invalid && (precio.dirty || precio.touched)" style="color:red"><!--Validaciones-->
+                                            El precio es requerido y debe ser mayor que 0.
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="class-md-4">
+                            <!-- Campo total -->
+                            <label for="total">Total</label>
+                            <input type="text" [value]="total + '€'" disabled><!--calculamos el total del albaran de salida-->
+                        </div>
+                        <div *ngIf="mensajeError != null" style="color:red"><!--Validaciones-->
+                            <p>{{ mensajeError }}</p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <button *ngIf="!editar" (click)="editarOn()">Editar</button><!--activar modo editar-->
+            <button *ngIf="editar" (click)="editarSalida(salidaSeleccionada.id)">Guardar</button><!--guardar datos de la edicion-->
+            <button (click)="cancelar()" id="cancelar">Cancelar</button>
+        </div>
+    </div>
 
-    
-    <!-- Botón para cancelar y volver a la tabla de salidas y reseteamos el mensaje de error a null -->
-    <button (click)="mostrarSalidas=!mostrarSalidas; mensajeError = null" id="cancelar">Cancelar</button>
-
-</div>  
+</div>

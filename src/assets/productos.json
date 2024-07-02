@@ -1,0 +1,35 @@
+{
+    "productos": [
+      { "id": 1, "nombre": "Cubiertos de Aluminio", "fecha_alta": "2023-02-15", "tipo": "Intermedio" },
+      { "id": 2, "nombre": "Marco de Foto de Acero", "fecha_alta": "2023-02-20", "tipo": "Terminado" },
+      { "id": 3, "nombre": "Sartén de Inox", "fecha_alta": "2023-02-25", "tipo": "Intermedio" },
+      { "id": 4, "nombre": "Llave de Aluminio", "fecha_alta": "2023-03-02", "tipo": "Terminado" },
+      { "id": 5, "nombre": "Taza de Acero", "fecha_alta": "2023-03-10", "tipo": "Intermedio" },
+      { "id": 6, "nombre": "Candado de Inox", "fecha_alta": "2023-03-15", "tipo": "Terminado" },
+      { "id": 7, "nombre": "Abrelatas de Aluminio", "fecha_alta": "2023-03-12", "tipo": "Intermedio" },
+      { "id": 8, "nombre": "Reloj de Pared de Acero", "fecha_alta": "2023-03-05", "tipo": "Terminado" },
+      { "id": 9, "nombre": "Cenicero de Inox", "fecha_alta": "2023-04-08", "tipo": "Intermedio" },
+      { "id": 10, "nombre": "Botella de Aluminio", "fecha_alta": "2023-04-03", "tipo": "Terminado" },
+      { "id": 11, "nombre": "Silla de Acero", "fecha_alta": "2023-04-15", "tipo": "Intermedio" },
+      { "id": 12, "nombre": "Marco de Espejo de Inox", "fecha_alta": "2023-04-22", "tipo": "Terminado" },
+      { "id": 13, "nombre": "Cucharón de Aluminio", "fecha_alta": "2023-05-02", "tipo": "Intermedio" },
+      { "id": 14, "nombre": "Teclado de Acero", "fecha_alta": "2023-05-08", "tipo": "Terminado" },
+      { "id": 15, "nombre": "Portarretratos de Inox", "fecha_alta": "2023-05-12", "tipo": "Intermedio" },
+      { "id": 16, "nombre": "Escultura de Aluminio", "fecha_alta": "2023-06-01", "tipo": "Terminado" },
+      { "id": 17, "nombre": "Martillo de Acero", "fecha_alta": "2023-06-10", "tipo": "Intermedio" },
+      { "id": 18, "nombre": "Candelabro de Inox", "fecha_alta": "2023-06-18", "tipo": "Terminado" },
+      { "id": 19, "nombre": "Tenedor de Aluminio", "fecha_alta": "2023-07-05", "tipo": "Intermedio" },
+      { "id": 20, "nombre": "Portavasos de Acero", "fecha_alta": "2023-07-12", "tipo": "Terminado" },
+      { "id": 21, "nombre": "Marco de Cuadro de Inox", "fecha_alta": "2023-07-20", "tipo": "Intermedio" },
+      { "id": 22, "nombre": "Clavos de Aluminio", "fecha_alta": "2023-08-01", "tipo": "Terminado" },
+      { "id": 23, "nombre": "Cerradura de Acero", "fecha_alta": "2023-08-08", "tipo": "Intermedio" },
+      { "id": 24, "nombre": "Escultura de Arte de Inox", "fecha_alta": "2023-08-15", "tipo": "Terminado" },
+      { "id": 25, "nombre": "Bolígrafo de Aluminio", "fecha_alta": "2023-09-02", "tipo": "Intermedio" },
+      { "id": 26, "nombre": "Llave Inglesa de Acero", "fecha_alta": "2023-09-10", "tipo": "Terminado" },
+      { "id": 27, "nombre": "Taza de Café de Inox", "fecha_alta": "2023-09-18", "tipo": "Intermedio" },
+      { "id": 28, "nombre": "Escultura de Belleza de Aluminio", "fecha_alta": "2023-10-01", "tipo": "Terminado" },
+      { "id": 29, "nombre": "Sartén Eléctrica de Acero", "fecha_alta": "2023-10-08", "tipo": "Intermedio" },
+      { "id": 30, "nombre": "Vasija de Inox", "fecha_alta": "2023-10-15", "tipo": "Terminado" }
+    ]
+  }
+  

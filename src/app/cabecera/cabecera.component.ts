@@ -3,6 +3,7 @@ import { LoginService } from '../servicios/servizo-login.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Usuario } from '../modelos/usuario';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -15,24 +16,37 @@ import { Usuario } from '../modelos/usuario';
 
 export class CabeceraComponent implements OnInit{
 
-  usuarioCabecera : Usuario ={  
-    usuario: '',
-    contrasinal: '',
+  usuarioCabecera : Usuario ={  //Inicializamos variable usuario
+    email: '',
+    password: '',
     rol: ''
   } as Usuario;
-  // Indicamos en el constructor los servicios necesarios para poder hacer el logout()
+
+  private usuarioSubscripcion: Subscription;
+
   constructor(private servizoLogin: LoginService, private direccionador: Router) {
     
   }
 
   desconectar(){
-    this.servizoLogin.logout();
+      this.servizoLogin.logout().subscribe((data: any) => {//Llamamos al servicio login y logout para desconectar el usuario
+        this.servizoLogin.clearSessionStorage();//limpiamos los datos de sesion
+        this.direccionador.navigate(['/login']);
+      });
   }
 
-    // Este método execútase cando a compoñente está lista para ser cargada. Vainos permitir suscribirnos aos cambios do usuario logeado
+  verPerfil(){ //navegamos a verPerfil
+      this.direccionador.navigate(['/perfil']);
+}
+
   ngOnInit(): void {
-    this.servizoLogin.getUsuarioLogeado$().subscribe((usuario) => {
-      this.usuarioCabecera = usuario;
-    }); // Facemos que o usuarioCabecera cambie cada vez que cambia o usuario logeado
+
+    this.usuarioSubscripcion = this.servizoLogin.usuario$.subscribe(
+      usuario => { //cambiamos el valor de usuario cuando desde servizoLoginUsuario cambia el valor
+        this.usuarioCabecera = usuario;
+      }
+    );
   }
+
+
 }

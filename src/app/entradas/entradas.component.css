@@ -1,12 +1,18 @@
 /* Estilo tabla */
 #tablaEntradas {
     overflow-y: scroll;
-    max-height: 450px;
+    max-height: 60vh;
     text-align: center;
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
     background-color: rgb(255, 255, 255);
     color: grey;
+}
+
+#tablaMateriales {
+    overflow-y: scroll;
+    max-height: 450px;
+    border-radius: 8px;
 }
 
 /* Estilo botones generales */
@@ -22,9 +28,10 @@ button {
 }
 
 /* Estilo botones con fondo distinto */
-#ne, #bportada {
+#ne{
     background-color: black;
     color: rgb(253, 203, 110);
+    margin-bottom: 20px;
 }
 
 /*padding de los th y td*/
@@ -38,11 +45,10 @@ th,td {
     flex-direction: column;
 }
 
-#botones { /*para que los botones esten separados*/
+#botones {
     display:flex;
     gap: 10px;
     margin: 10px;
-    justify-content: space-between;
 }
 
 #almacen {
@@ -51,14 +57,11 @@ th,td {
     height: 50%;
 }
 
-#campos { /* se colocaran en columna*/
+#campos {
     display:flex;
     flex-direction: column;
 }
 
-#cancelar {
-    margin: 10px;
-}
 
 #submit {
     margin: 10px;
@@ -81,14 +84,22 @@ h2 {
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
     background-color: rgb(255, 255, 255);
-    color: grey;
     padding: 30px
 }
 
-input {
-    margin: 10px;
+.input-materiales {
+    width: 60%;
 }
 
-.isEliminado { /*cuando "eliminemos" se volverá de color rojo aplicando esta clase*/
-    color:red;
+input {
+    margin: 0.5%;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.transicion-detalle {
+    transition: all 0.5s ease;
 }

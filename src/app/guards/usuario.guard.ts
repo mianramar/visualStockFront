@@ -10,13 +10,15 @@ export class UsuarioGuard {
   
   // Este método vai ser o que determine se a ruta é accesible ou non
   canActivate(): boolean {
-    const usuarioRecuperado = window.sessionStorage.getItem('usuario'); // Recuperamos el usuario logueado
-    if(usuarioRecuperado) {
-      return true;
-    } else {
-      this.direccionador.navigate(['/login']); // Si no se ha recuperado ningún usuario, redirecciona a login
-      return false;
-    }
+    if (typeof window !== "undefined") { //Para asegurarnos que lo renderiza el navegador y no de un error de "window is not defined"
+      const usuarioRecuperado = window.sessionStorage.getItem('usuario'); // Recuperamos el usuario logueado
+      if(usuarioRecuperado) {
+        return true;
+      } else {
+        this.direccionador.navigate(['/login']); // Si no se ha recuperado ningún usuario, redirecciona a login
+        return false;
+      }
+    } else return false;
   }
 }
 

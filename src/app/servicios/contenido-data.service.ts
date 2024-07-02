@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import * as departamentosJson from '../../assets/data/departamentos.json';
+import * as departamentosJson from '../../assets/departamentos.json';
 import { Departamento } from '../modelos/departamento';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
 
@@ -11,17 +12,19 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class ContenidoDataService {
 
-  //Cargamos el ficheros departamentos.json en la variable datos
-  datos: Departamento[] = departamentosJson.departamentos;
+  constructor(private httpClient: HttpClient) {
 
-  datos$: BehaviorSubject<Departamento[]>; // Definimos un subject que emitirá o array de usuarios para todos os elementos que estean suscritos a el
-  
-  constructor() {
-    this.datos$ = new BehaviorSubject(this.datos); // Inicialmente non hai suscriptores
   }
-  
-  // Este método permite obter un observable do array de departamentos (vai permitir suscribirse aos cambios do array de departamentos)
-  getDepartamentos$(): Observable<Departamento[]> {
-    return this.datos$.asObservable(); // Devolvemos o Subject como observable para que outros elementos poidan suscribirse ao mesmo
+
+  private getHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+      headers = headers.set('accept', `application/json`); //header para aceptar JSON
+    return headers;
+  }
+
+
+  getDatosAemet$() :Observable<any>{
+    const headers = this.getHeaders();
+    return this.httpClient.get<any>( 'http://localhost:8000/api/aemet', { headers }); //lamada get a la API
   }
 }

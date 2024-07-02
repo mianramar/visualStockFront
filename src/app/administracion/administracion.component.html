@@ -1,56 +1,208 @@
-<!-- Botón de nuevo usuario -->
-<div id="nuevoUsuario" *ngIf="mostrarUsuarios"> <!-- Ocultamos el boton si no está en mostrarUsuarios -->
-    <button (click)= "mostrarFormularioCrear()" id="nu" >Nuevo usuario</button>
-    <button (click) = "navegarPortada()" id="bportada">Volver a Portada</button>
+<!-- Descripcion y Botón de nuevo usuario -->
+<div id="nuevoUsuario">
+    <h2>Usuarios</h2>
+    <button  id="nu" data-toggle="modal" data-target="#modalNuevoUsuario">Nuevo usuario</button> <!-- Abrimos nuevo modal de usuario -->
 </div>
 <!-- Tabla de usuarios -->
-<table id="usuariosExistentes" *ngIf="mostrarUsuarios"> <!-- Si mostrarUsuarios es true -->
-    <thead>
-        <tr class="lineaTabla"> <!-- headers -->
-            <th>Usuario</th>
-            <th>Contraseña</th>
-            <th>Rol</th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>  
-        <tr class="lineaTabla" *ngFor="let usuario of listaxeUsuarios"> <!-- una fila por cada usuario -->
-            <td>{{ usuario.usuario }}</td>
-            <td>{{ usuario.contrasinal }}</td>
-            <td>{{ usuario.rol }}</td>
-            <td><button (click)="mostrarFormularioEditar(usuario)">Editar</button></td>
-            <td><button (click)="borrarUsuario(usuario)">Eliminar</button></td>
-        </tr>
-    </tbody>  
-</table>
-<!-- Usaremos un mismo formulario para nuevos usuarios o editar usuarios ya existentes, según accedamos por nuevo usuario o editar, cambiará de características-->
-<div id="contenedorFormularioUsuarios" *ngIf="!mostrarUsuarios">  <!-- Si mostrarUsuario es falso -->
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped"> <!-- Classe de bootstrap tabla a rayas -->
+            <thead>
+                <tr> <!-- headers -->
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>  
+                <tr  *ngFor="let usuario of listaxeUsuarios"> <!-- una fila por cada usuario -->
+                    <td>{{ usuario.name }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.rol }}</td>
+                    <td><button (click)="escogerUsuario(usuario.id)" data-toggle="modal" data-target="#modalEditUsuario">Editar</button><!--Abrir modal editar Usuario-->
+                        <button (click)="borrarUsuario(usuario.id)">Eliminar</button></td><!--Llamamos a borrar usuario-->
+                </tr>
+            </tbody>  
+        </table>
+    </div>
+</div>
 
-    <form [formGroup]="formularioUsuario" (ngSubmit)="editar ? modificarUsuario() : nuevoUsuario()"> <!-- Si editar es true, se ejecutará la función editar, sino la de nuevoUsuario -->
 
-        <h1>{{ editar ? 'Editar Usuario' : 'Nuevo Usuario' }}</h1> <!-- Para cambiar el titulo segun editar/nuevo -->
-        <div *ngIf="mensajeError != null" style="color:red"><!-- Si el campo usuario ya existe, mostramos el mensaje en rojo -->
-            <p>{{ mensajeError }}</p>
+    <!-- Modal Nuevo Usuario -->
+    <div class="modal fade" id="modalNuevoUsuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Registrar nuevo Usuario</h5><!--Titulo del modal nuevo usuario-->
+            <button type="button" class="close-btn" data-dismiss="modal" aria-label="Close" id="cerrarModal">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <div id="contenedorFormularioUsuarios">  <!-- Contenedor usuarios -->
+
+                    <form [formGroup]="formularioUsuario" (ngSubmit)="nuevoUsuario()"> <!-- FormGourp formulario usuario para validaciones y llama a nuevo usuario cuando hacemos submit -->
+                
+                        <div *ngIf="mensajeError != null && formSubmitted" style="color:red"><!-- Si hay errores, y se ha enviado el formulario, los mostramos en rojo -->
+                            <p>{{ mensajeError }}</p>
+                        </div>
+                        <!-- Nombre -->
+                        <div class="form-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" class="controlFormulario" formControlName="nombre"> <!-- Validaciones -->
+                            <div *ngIf="(formSubmitted || formularioUsuario.get('nombre').dirty || formularioUsuario.get('nombre').touched) && formularioUsuario.get('nombre').invalid" style="color:red">
+                                <small *ngIf="formularioUsuario.get('nombre').errors?.['required']">Nombre es requerido.</small>
+                            </div>
+                        </div>
+
+                        <!-- Apellidos -->
+                        <div class="form-group">
+                            <label for="apellido">Apellidos:</label>
+                            <input type="text" class="controlFormulario" formControlName="apellido"> <!-- Validaciones -->
+                            <div *ngIf="formularioUsuario.get('apellido').invalid && (formularioUsuario.get('apellido').dirty || formularioUsuario.get('apellido').touched || formSubmitted)" style="color:red">
+                                <small *ngIf="formularioUsuario.get('apellido').errors?.['required']">Apellidos son requeridos.</small>
+                            </div>
+                        </div>
+
+                        <!-- Nombre de usuario -->
+                        <div class="form-group">
+                            <label for="name">Nombre de usuario:</label>
+                            <input type="text" class="controlFormulario" formControlName="name"> <!-- Validaciones -->
+                            <div *ngIf="formularioUsuario.get('name').invalid && (formularioUsuario.get('name').dirty || formularioUsuario.get('name').touched || formSubmitted)" style="color:red">
+                                <small *ngIf="formularioUsuario.get('name').errors?.['required']">Nombre de usuario es requerido.</small>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="text" class="controlFormulario" formControlName="email"> <!-- Validaciones -->
+                            <div *ngIf="formularioUsuario.get('email').invalid && (formularioUsuario.get('email').dirty || formularioUsuario.get('email').touched  || formSubmitted)" style="color:red">
+                                <div *ngIf="formularioUsuario.get('email').errors?.['required']">Email es requerido.</div>
+                                <small *ngIf="formularioUsuario.get('email').errors?.['email']">Email no es válido.</small>
+                            </div>
+                        </div>
+
+                        <!-- Contraseña -->
+                        <div class="form-group">
+                            <label for="password">Contraseña:</label>
+                            <input type="password" class="controlFormulario" formControlName="password"> <!-- Validaciones -->
+                            <div *ngIf="formularioUsuario.get('password').invalid && (formularioUsuario.get('password').dirty || formularioUsuario.get('password').touched  || formSubmitted)" style="color:red">
+                                <small *ngIf="formularioUsuario.get('password').errors?.['required']">Contraseña es requerida.</small>
+                            </div>
+                        </div>
+
+                        <!-- Confirmar Contraseña -->
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirmar Contraseña:</label>
+                            <input type="password" class="controlFormulario" formControlName="confirmPassword"> <!-- Validaciones -->
+                            <div *ngIf="formularioUsuario.get('confirmPassword').invalid && (formularioUsuario.get('confirmPassword').dirty || formularioUsuario.get('confirmPassword').touched  || formSubmitted)" style="color:red">
+                                <div *ngIf="formularioUsuario.get('confirmPassword').errors?.['required']">Confirmación de contraseña es requerida.</div>
+                            </div>
+                            <small *ngIf="formularioUsuario.hasError('passwordMismatch')" style="color:red">
+                                Las contraseñas no coinciden.
+                            </small>
+                        </div>
+
+                        <!-- Rol -->
+                        <div class="form-group">
+                            <label for="rol">Rol:</label>
+                            <select class="controlFormulario" formControlName="rol">
+                                <option value="administrador">Admin</option>
+                                <option value="usuario" selected>Usuario</option>
+                            </select> <!-- Validaciones -->
+                            <div *ngIf="formularioUsuario.get('rol').invalid && (formularioUsuario.get('rol').dirty || formularioUsuario.get('rol').touched  || formSubmitted)" style="color:red">
+                                <small *ngIf="formularioUsuario.get('rol').errors?.['required']">Rol es requerido.</small>
+                            </div>
+                        </div>
+                
+                        <!-- Botón submit -->
+                        <button type="submit">Guardar</button>
+                    </form> 
+                
+                </div>  
+            </div>
         </div>
-        <!-- Campo nome -->
-        <label for="usuario">Usuario:</label>
-        <input type="text" class="controlFormulario" formControlName="usuario">
-        
-        <!-- Campo contrasinal -->
-        <label for="contrasinal">Contraseña:</label>
-        <input type="text" class="controlFormulario" formControlName="contrasinal">
-        
-        <!-- Campo rol -->
-        <label for="rol">Rol:</label>
-        <input type="text" class="controlFormulario" formControlName="rol">
+        </div>
+    </div>
 
-        <!-- Botón submit -->
-        <button type="submit">Guardar</button>
-    </form> 
 
-    
-    <!-- Botón para cancelar y volver a la tabla de usuarios y reseteamos el mensaje de error a null -->
-    <button (click)="mostrarUsuarios=!mostrarUsuarios; mensajeError = null" id="cancelar">Cancelar</button>
 
-</div>  
+
+    <!-- Modal Editar-->
+    <div class="modal fade" id="modalEditUsuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Editar Usuario</h5><!-- titulo modal editar usuario -->
+            <button type="button" class="close-btn" data-dismiss="modal" aria-label="Close" id="cerrarModalEdit">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body"><!--Cuerpo del modal-->
+                <div id="contenedorFormularioUsuarios"> 
+
+                    <form [formGroup]="formularioUsuarioEdit" (ngSubmit)="editarUsuario()"> <!-- formgroup utilizando el formularioUsuarioEdit para las validaciones de editarUsuario -->
+                
+                        <div *ngIf="mensajeError != null && formEditSubmitted" style="color:red"><!-- Mensaje de error si falla alguna validacion en rojo -->
+                            <p>{{ mensajeError }}</p>
+                        </div>
+                           <!-- Nombre -->
+                        <div class="form-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" class="controlFormulario" formControlName="nombre"><!--Validaciones-->
+                            <div *ngIf="(formEditSubmitted || formularioUsuarioEdit.get('nombre').dirty || formularioUsuarioEdit.get('nombre').touched) && formularioUsuarioEdit.get('nombre').invalid" style="color:red">
+                                <small *ngIf="formularioUsuarioEdit.get('nombre').errors?.['required']">Nombre es requerido.</small>
+                            </div>
+                        </div>
+
+                        <!-- Apellidos -->
+                        <div class="form-group">
+                            <label for="apellido">Apellidos:</label>
+                            <input type="text" class="controlFormulario" formControlName="apellido"><!--Validaciones-->
+                            <div *ngIf="formularioUsuarioEdit.get('apellido').invalid && (formularioUsuarioEdit.get('apellido').dirty || formularioUsuarioEdit.get('apellido').touched || formEditSubmitted)" style="color:red">
+                                <small *ngIf="formularioUsuarioEdit.get('apellido').errors?.['required']">Apellidos son requeridos.</small>
+                            </div>
+                        </div>
+                        <!-- Nombre de usuario -->
+                        <div class="form-group">
+                            <label for="name">Nombre de usuario:</label>
+                            <input type="text" class="controlFormulario" formControlName="name"><!--Validaciones-->
+                            <div *ngIf="formularioUsuarioEdit.get('name').invalid && (formularioUsuarioEdit.get('name').dirty || formularioUsuarioEdit.get('name').touched || formEditSubmitted)" style="color:red">
+                                <small *ngIf="formularioUsuarioEdit.get('name').errors?.['required']">Nombre de usuario es requerido.</small>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="text" class="controlFormulario" formControlName="email"><!--Validaciones-->
+                            <div *ngIf="formularioUsuarioEdit.get('email').invalid && (formularioUsuarioEdit.get('email').dirty || formularioUsuarioEdit.get('email').touched  || formEditSubmitted)" style="color:red">
+                                <div *ngIf="formularioUsuarioEdit.get('email').errors?.['required']">Email es requerido.</div>
+                                <small *ngIf="formularioUsuarioEdit.get('email').errors?.['email']">Email no es válido.</small>
+                            </div>
+                        </div>
+                                            
+
+                        <!-- Rol -->
+                        <div class="form-group">
+                            <label for="rol">Rol:</label>
+                            <select class="controlFormulario" formControlName="rol">
+                                <option value="administrador">Admin</option>
+                                <option value="usuario" selected>Usuario</option>
+                            </select><!--Validaciones-->
+                            <div *ngIf="formularioUsuarioEdit.get('rol').invalid && (formularioUsuarioEdit.get('rol').dirty || formularioUsuarioEdit.get('rol').touched  || formEditSubmitted)" style="color:red">
+                                <small *ngIf="formularioUsuarioEdit.get('rol').errors?.['required']">Rol es requerido.</small>
+                            </div>
+                        </div>
+                                    
+                        <!-- Botón submit -->
+                        <button type="submit">Guardar</button>
+                    </form> 
+                
+                </div>  
+            </div>
+        </div>
+        </div>
+    </div>

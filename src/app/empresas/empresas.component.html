@@ -1,0 +1,157 @@
+<!-- Botón de nueva empresa -->
+<div id="nuevoUsuario" > 
+    <h2>Empresas</h2>
+    <button  id="ne" data-toggle="modal" data-target="#modalNuevaEmpresa">Nueva Empresa</button> <!--Abrimos modal nueva empresa-->
+</div>
+<!-- Tabla de empresas -->
+<div class="row">
+    <div class="col-md-12" id="tablaEntradas">
+        <table class="table table-striped">
+            <thead>
+                <tr> <!-- headers -->
+                    <th>Nombre o Razón Social</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>  
+                <tr  *ngFor="let empresa of listaxeEmpresas"> <!-- una fila por cada empresa -->
+                    <td>{{ empresa.nombre }}</td>
+                    <td>{{ empresa.email }}</td>
+                    <td>{{ empresa.telefono }}</td>
+                    <td>{{ empresa.direccion }}</td>
+                    <td><button (click)="escogerEmpresa(empresa.id)" data-toggle="modal" data-target="#modalEditEmpresa">Editar</button><!--Abrimos modal editarEmpresa-->
+                        <button (click)="borrarEmpresa(empresa.id)">Eliminar</button></td>
+                </tr>
+            </tbody>  
+        </table>
+    </div>
+</div>
+
+
+
+ <!-- Modal Nueva Empresa -->
+ <div class="modal fade" id="modalNuevaEmpresa" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Registrar nueva Empresa</h5><!--titulo-->
+            <button type="button" class="close-btn" data-dismiss="modal" aria-label="Close" id="cerrarModal"><!--boton para cerrar modal-->
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <div id="contenedorFormularioUsuarios"> 
+
+                    <form [formGroup]="formularioEmpresa" (ngSubmit)="nuevaEmpresa()"> <!--utilizamos el formgroup formulario empresa para validar-->
+                
+                        <div *ngIf="mensajeError != null && formSubmitted" style="color:red"><!-- Mensaje de error en rojo si hubiera alguno -->
+                            <p>{{ mensajeError }}</p>
+                        </div>
+                        <!-- Nombre -->
+                        <div class="form-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" class="controlFormulario" formControlName="nombre"><!--Validaciones-->
+                            <div *ngIf="(formSubmitted || formularioEmpresa.get('nombre').dirty || formularioEmpresa.get('nombre').touched) && formularioEmpresa.get('nombre').invalid" style="color:red">
+                                <small *ngIf="formularioEmpresa.get('nombre').errors?.['required']">Nombre es requerido.</small>
+                            </div>
+                        </div>
+                        <!-- Telefono -->
+                        <div class="form-group">
+                            <label for="telefono">Teléfono:</label>
+                            <input type="text" class="controlFormulario" formControlName="telefono"><!--Validaciones-->
+                            <div *ngIf="(formSubmitted || formularioEmpresa.get('telefono').dirty || formularioEmpresa.get('telefono').touched) && formularioEmpresa.get('telefono').invalid" style="color:red">
+                                <small *ngIf="formularioEmpresa.get('telefono').errors?.['required']">Teléfono es requerido.</small>
+                            </div>
+                        </div>
+                        <!-- Direccion -->
+                        <div class="form-group">
+                            <label for="direccion">Dirección:</label>
+                            <input type="text" class="controlFormulario" formControlName="direccion"><!--Validaciones-->
+                            <div *ngIf="(formSubmitted || formularioEmpresa.get('direccion').dirty || formularioEmpresa.get('direccion').touched) && formularioEmpresa.get('direccion').invalid" style="color:red">
+                                <small *ngIf="formularioEmpresa.get('direccion').errors?.['required']">Dirección es requerido.</small>
+                            </div>
+                        </div>
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="text" class="controlFormulario" formControlName="email"><!--Validaciones-->
+                            <div *ngIf="formularioEmpresa.get('email').invalid && (formularioEmpresa.get('email').dirty || formularioEmpresa.get('email').touched  || formSubmitted)" style="color:red">
+                                <div *ngIf="formularioEmpresa.get('email').errors?.['required']">Email es requerido.</div>
+                                <small *ngIf="formularioEmpresa.get('email').errors?.['email']">Email no es válido.</small>
+                            </div>
+                        </div>
+                        <!-- Botón submit -->
+                        <button type="submit">Guardar</button>
+                    </form> 
+                
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal Editar-->
+<div class="modal fade" id="modalEditEmpresa" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Editar Empresa</h5><!--titulo-->
+            <button type="button" class="close-btn" data-dismiss="modal" aria-label="Close" id="cerrarModalEdit"><!--cerrar modal-->
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <div id="contenedorFormularioUsuarios">  
+
+                    <form [formGroup]="formularioEmpresaEdit" (ngSubmit)="editarEmpresa()"> 
+                
+                        <div *ngIf="mensajeError != null && formEditSubmitted" style="color:red"><!-- Mostramos los errores de validacion en rojo si los hubiera -->
+                            <p>{{ mensajeError }}</p>
+                        </div>
+                        <!-- Nombre -->
+                        <div class="form-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" class="controlFormulario" formControlName="nombre"><!--Validaciones-->
+                            <div *ngIf="(formSubmitted || formularioEmpresaEdit.get('nombre').dirty || formularioEmpresaEdit.get('nombre').touched) && formularioEmpresaEdit.get('nombre').invalid" style="color:red">
+                                <small *ngIf="formularioEmpresaEdit.get('nombre').errors?.['required']">Nombre es requerido.</small>
+                            </div>
+                        </div>
+                        <!-- Telefono -->
+                        <div class="form-group">
+                            <label for="telefono">Teléfono:</label>
+                            <input type="text" class="controlFormulario" formControlName="telefono"><!--Validaciones-->
+                            <div *ngIf="(formSubmitted || formularioEmpresaEdit.get('telefono').dirty || formularioEmpresaEdit.get('telefono').touched) && formularioEmpresaEdit.get('telefono').invalid" style="color:red">
+                                <small *ngIf="formularioEmpresaEdit.get('telefono').errors?.['required']">Teléfono es requerido.</small>
+                            </div>
+                        </div>
+                        <!-- Direccion -->
+                        <div class="form-group">
+                            <label for="direccion">Dirección:</label>
+                            <input type="text" class="controlFormulario" formControlName="direccion"><!--Validaciones-->
+                            <div *ngIf="(formSubmitted || formularioEmpresaEdit.get('direccion').dirty || formularioEmpresaEdit.get('direccion').touched) && formularioEmpresaEdit.get('direccion').invalid" style="color:red">
+                                <small *ngIf="formularioEmpresaEdit.get('direccion').errors?.['required']">Dirección es requerido.</small>
+                            </div>
+                        </div>
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="text" class="controlFormulario" formControlName="email"><!--Validaciones-->
+                            <div *ngIf="formularioEmpresaEdit.get('email').invalid && (formularioEmpresaEdit.get('email').dirty || formularioEmpresaEdit.get('email').touched  || formSubmitted)" style="color:red">
+                                <div *ngIf="formularioEmpresaEdit.get('email').errors?.['required']">Email es requerido.</div>
+                                <small *ngIf="formularioEmpresaEdit.get('email').errors?.['email']">Email no es válido.</small>
+                            </div>
+                        </div>
+                        <button type="submit">Guardar</button>
+                    </form>
+                
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>

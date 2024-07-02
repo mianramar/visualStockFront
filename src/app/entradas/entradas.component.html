@@ -1,66 +1,122 @@
-<app-menu [selector]="'E'" style="display: flex; justify-content: center; align-items: center;"></app-menu> <!--Para el input de menucomponent-->
 <!-- Botón de nuevo entrada -->
-<div id="nuevoEntrada" *ngIf="mostrarEntradas"> <!-- Ocultamos el boton si no está en mostrarEntradas -->
+<div id="nuevoEntrada"> 
+    <h2>Entradas</h2>
     <div id="botones">
-        <button (click)="mostrarFormularioCrear()" id="ne" >Registrar nueva entrada</button>
-        <button (click) = "navegarPortada()" id="bportada">Volver a Portada</button>
+        <button (click)="nuevaEntrada()" id="ne" >Registrar nueva entrada</button> <!--Navegamos a nueva entrada-->
     </div>
 </div>
-<!-- Tabla de entradas -->
-<div id="tablaEntradas" *ngIf="mostrarEntradas">
-<table id="entradasExistentes" >
-    <thead>
-        <tr class="lineaTabla"> <!-- cabeceras -->
-            <th>Numero</th>
-            <th>Empresa</th>
-            <th>Fecha</th>
-            <th>Total</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>  
-        <tr class="lineaTabla" *ngFor="let entrada of listaxeEntradas" [ngClass]="{'isEliminado': entrada.isEliminado}"> <!-- una fila por cada entrada -->
-            <td>{{ entrada.numero }}</td>
-            <td>{{ entrada.empresa }}</td>
-            <td>{{ entrada.fecha }}</td>
-            <td>{{ entrada.total }}</td>
-            <td><button (click)="eliminarAlbaran(entrada.numero)">Eliminar</button></td>
-        </tr>
-    </tbody>  
-</table>
-</div>
-<!-- Usaremos un mismo formulario para nuevos entradas o editar entradas ya existentes, según accedamos por nuevo entrada o editar, cambiará de características-->
-<div id="contenedorFormularioEntradas" *ngIf="!mostrarEntradas">  <!-- Si mostrarEntrada es falso -->
-
-    <form [formGroup]="formularioEntrada" (ngSubmit)="nuevaEntrada()"> <!-- Función nuevoEntrada -->
-
-        <h1>Nueva entrada</h1> 
-        <div id="campos">
-            <div *ngIf="mensajeError != null" style="color:red"><!-- Se o campo numero ya existe, amosamos a mensaxe en vermello -->
-                <p>{{ mensajeError }}</p>
-            </div>
-            <!-- Campo numero -->
-            <label for="numero">Numero:</label>
-            <input type="text" class="controlFormulario" formControlName="numero">
-            
-            <!-- Campo empresa -->
-            <label for="empresa">Empresa:</label>
-            <input type="text" class="controlFormulario" formControlName="empresa">
-            
-            <!-- Campo fecha -->
-            <label for="fecha">Fecha:</label>
-            <input type="date" class="controlFormulario" formControlName="fecha">
-
-            <!-- Campo total -->
-            <label for="total">Total:</label>
-            <input type="text" class="controlFormulario" formControlName="total">
+<div class="row">
+    <div [ngClass]="{'col-md-12': mostrarEntradas, 'col-md-8': !mostrarEntradas, 'transicion-detalle': true}"><!--cambiamos de ccol12 a 8 dependiendo del flag mostrarEntradas-->
+        <!-- Tabla de entradas -->
+        <div id="tablaEntradas" >
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Fecha</th>
+                    <th>Nombre de Empresa</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let entrada of listaxeEntradas">
+                    <td>{{ entrada.numero }}</td>
+                    <td>{{ entrada.fecha }}</td>
+                    <td>{{ entrada.empresa_nome }}</td>
+                    <td>
+                        <button (click)="verDetalle(entrada.id)">Ver Detalle</button><!--iniciamos transicion para ver detalleEntrada-->
+                        <button (click)="eliminarEntrada(entrada.id)">Eliminar</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-        <!-- Botón submit -->
-        <button type="submit" id="submit">Guardar</button>
-    </form> 
+    </div>
 
-    
-    <!-- Botón para cancelar y volver a la tabla de entradas y reseteamos el mensaje de error a null -->
-    <button (click)="mostrarEntradas=!mostrarEntradas; mensajeError = null" id="cancelar">Cancelar</button>
+<div class="col-md-4" *ngIf="mostrarDetalle">
+    <div id="contenedorFormularioEntradas">
+        <form #entradaForm="ngForm"> <!-- Referencia del formulario para validación en editar -->
+            <h1>Detalle Albarán</h1>
+            <div id="campos">
+                <!-- Campo numero -->
+                <div class="form-group">
+                    <label for="numero">Numero Albarán:</label>
+                    <input type="text" [(ngModel)]="entradaSeleccionada.numero" name="numero" [disabled]="!editar" required #numero="ngModel">
+                    <div *ngIf="numero.invalid && numero.touched" style="color:red"><!--Validacion-->
+                        El número de albarán es requerido.
+                    </div>
+                </div>
+                <!-- Campo empresa -->
+                <div class="form-group">
+                    <label for="empresa_nome">Empresa:</label>
+                    <select [(ngModel)]="entradaSeleccionada.empresa_id" name="empresa_id" [disabled]="!editar" required #empresa_id="ngModel">
+                        <option *ngFor="let empresa of listaxeEmpresas" [value]="empresa.id">{{ empresa.nombre }}</option>
+                    </select>
+                    <div *ngIf="empresa_id.invalid && empresa_id.touched" style="color:red"><!--Validacion-->
+                        La empresa es requerida.
+                    </div>
+                </div>
+                <!-- Campo fecha -->
+                <div class="form-group">
+                    <label for="fecha">Fecha:</label>
+                    <input type="date" [(ngModel)]="entradaSeleccionada.fecha" name="fecha" [disabled]="!editar" required #fecha="ngModel">
+                    <div *ngIf="fecha.invalid && fecha.touched" style="color:red"><!--Validacion-->
+                        La fecha es requerida.
+                    </div>
+                </div>
+                <!-- Campo tipo -->
+                <div class="form-group">
+                    <label for="tipo">Tipo de operación:</label>
+                    <input type="text" value="{{entradaSeleccionada.tipo}}" disabled>
+                </div>
+                <!-- Campos de materiales -->
+                <div id="tablaMateriales">
+                    <h3>Materiales</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Metal</th>
+                                <th>Dimensiones</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let material of entradaSeleccionada.materials">
+                                <td>{{ material.metal }}</td>
+                                <td>{{ material.dimensiones }}</td>
+                                <td>
+                                    <input type="number" [id]="'cantidad-' + material.id" [(ngModel)]="material.pivot.cantidad" name="cantidad-{{material.id}}" [disabled]="!editar" class="input-materiales" required #cantidad="ngModel" min="1">
+                                    <div *ngIf="editar && cantidad.invalid && cantidad.touched" style="color:red"><!--Validacion-->
+                                        La cantidad es requerida y debe ser mayor que 0.
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="number" [id]="'precio-' + material.id" [(ngModel)]="material.pivot.precio" name="precio-{{material.id}}" [disabled]="!editar" class="input-materiales" required #precio="ngModel" min="0.01" step="0.01">
+                                    <div *ngIf="editar && precio.invalid && precio.touched" style="color:red"><!--Validacion-->
+                                        El precio es requerido y debe ser mayor que 0.
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="class-md-4">
+                        <!-- Campo total -->
+                        <label for="total">Total</label>
+                        <input type="text" [value]="total + '€'" disabled><!--Valortotal calculado en calcularTotal()-->
+                    </div>
+                    <div *ngIf="mensajeError != null" style="color:red">
+                        <p>{{ mensajeError }}</p>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <button *ngIf="!editar" (click)="editarOn()">Editar</button><!--cambiamos flag para editar-->
+        <button *ngIf="editar" (click)="editarEntrada(entradaForm, entradaSeleccionada.id)">Guardar</button><!--guardamos cambios de la edicion-->
+        <button (click)="cancelar()" id="cancelar">Cancelar</button><!--Cerramos el detalle-->
+    </div> 
+</div>
+</div>
 
-</div>  

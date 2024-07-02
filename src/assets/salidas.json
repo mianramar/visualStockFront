@@ -1,0 +1,35 @@
+{
+    "salidas": [
+      { "numero": 31, "empresa": "MetalExits Corp.", "fecha": "2023-10-20", "total": 1200 },
+      { "numero": 32, "empresa": "SteelOut Ltd.", "fecha": "2023-10-25", "total": 1800 },
+      { "numero": 33, "empresa": "AluExports Inc.", "fecha": "2023-11-02", "total": 2100 },
+      { "numero": 34, "empresa": "InoxOutsourcing", "fecha": "2023-11-10", "total": 1500 },
+      { "numero": 35, "empresa": "MetalExit Innovations", "fecha": "2023-11-15", "total": 2500 },
+      { "numero": 36, "empresa": "SteelDispatch Solutions", "fecha": "2023-11-22", "total": 2000 },
+      { "numero": 37, "empresa": "AluExports Inc.", "fecha": "2023-11-28", "total": 1700 },
+      { "numero": 38, "empresa": "IronOutsourcing", "fecha": "2023-12-05", "total": 1900 },
+      { "numero": 39, "empresa": "StainlessExports", "fecha": "2023-12-12", "total": 2200 },
+      { "numero": 40, "empresa": "AluLogistics Solutions", "fecha": "2023-12-18", "total": 2600 },
+      { "numero": 41, "empresa": "SteelTransit Innovators", "fecha": "2023-12-25", "total": 3100 },
+      { "numero": 42, "empresa": "InoxDispatch Industries", "fecha": "2024-01-02", "total": 1800 },
+      { "numero": 43, "empresa": "MetalExports Elite", "fecha": "2024-01-10", "total": 3200 },
+      { "numero": 44, "empresa": "SteelDistribution Ltd.", "fecha": "2024-01-15", "total": 2500 },
+      { "numero": 45, "empresa": "AluTransit Innovate", "fecha": "2024-01-22", "total": 1900 },
+      { "numero": 46, "empresa": "InoxDistribution Solutions", "fecha": "2024-02-01", "total": 3000 },
+      { "numero": 47, "empresa": "MetalOutsourcing Inc.", "fecha": "2024-02-10", "total": 2800 },
+      { "numero": 48, "empresa": "SteelExit Innovators", "fecha": "2024-02-18", "total": 2300 },
+      { "numero": 49, "empresa": "AluDispatch Solutions", "fecha": "2024-02-25", "total": 1700 },
+      { "numero": 50, "empresa": "IronTransit Logistics", "fecha": "2024-03-02", "total": 2000 },
+      { "numero": 51, "empresa": "StainlessDistribution Ltd.", "fecha": "2024-03-08", "total": 2200 },
+      { "numero": 52, "empresa": "AluExports Elite", "fecha": "2024-03-15", "total": 2800 },
+      { "numero": 53, "empresa": "SteelExit Logistics", "fecha": "2024-03-22", "total": 3100 },
+      { "numero": 54, "empresa": "InoxOutsourcing Innovate", "fecha": "2024-03-28", "total": 1800 },
+      { "numero": 55, "empresa": "MetalDistribution Solutions", "fecha": "2024-04-05", "total": 3200 },
+      { "numero": 56, "empresa": "SteelExports Ltd.", "fecha": "2024-04-12", "total": 2500 },
+      { "numero": 57, "empresa": "AluTransit Innovate", "fecha": "2024-04-18", "total": 1900 },
+      { "numero": 58, "empresa": "InoxDistribution Solutions", "fecha": "2024-04-25", "total": 3000 },
+      { "numero": 59, "empresa": "MetalOutsourcing Inc.", "fecha": "2024-05-02", "total": 2800 },
+      { "numero": 60, "empresa": "SteelExit Innovators", "fecha": "2024-05-08", "total": 2300 }
+    ]
+  }
+  

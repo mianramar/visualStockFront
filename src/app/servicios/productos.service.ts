@@ -1,49 +1,56 @@
 import { Injectable } from '@angular/core';
 import { Producto } from '../modelos/producto';
-import * as productosJson from '../../assets/data/productos.json';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs-compat';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductosService {
 
-
-  //Cargamos el ficheros productos.json en la variable productos
-  productos: Producto[] = productosJson.productos;
-  // Definimos un subject que emitirá o array de productos para todos os elementos que estean suscritos a el
-  productos$: BehaviorSubject<Producto[]>;
-
-  constructor() {
-    this.productos$ = new BehaviorSubject(this.productos);
+  constructor(private httpClient: HttpClient) {
   }
 
-  // Este método permite obter un observable do array de productos
-  getProductos$(): Observable<Producto[]> {
-    return this.productos$.asObservable(); // Devolvemos o Subject como observable para que outros elementos poidan suscribirse ao mesmo
+  // Para obtener los headers que usaremos en cada petición para autorizarnos
+  private getHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+    const usuarioRecuperado = window.sessionStorage.getItem('usuario'); // Recuperamos el usuario logueado
+    if(usuarioRecuperado) { // Si recuperamos un usuario lo parseamos y usamos el accessToken en el header para autorizarnos en las peticiones
+      const usuarioParseado = JSON.parse(usuarioRecuperado);
+      headers = headers.set('Authorization', `Bearer ${usuarioParseado.accessToken}`);
+    }
+    return headers;
   }
 
-
-  // Este método permitirá dar de alta novos usuarios ao tempo que informará aos suscriptores das novidades
-  engadirProducto(pProducto: Producto): string {
-    // Buscamos el ultimo id
-    let ultimoId = 0;
-
-    this.productos.forEach(producto => {
-        if (producto.id > ultimoId) {
-            ultimoId = producto.id;
-        }
-    });
-    //Le sumamos 1 para obtener el siguiente id
-    ultimoId += 1;
-
-    //Se lo asignamos al producto
-    pProducto.id = ultimoId;
-
-    this.productos.push(pProducto); // Engadimos o novo producto ao array
-    this.productos$.next(this.productos); // Enviamos a todos os suscriptores o array actualizado
-    return null; // no devuelve error
-
+  getProductos$(): Observable<any> {
+    const headers = this.getHeaders();
+    return this.httpClient.get<any>( 'http://localhost:8000/api/productos', { headers }); //llamada get a apiProductos
   }
+
+  // Este método nos permite eliminar el producto elegido
+  eliminarProducto(id: number) {
+    const headers = this.getHeaders();
+
+    return this.httpClient.delete<any>( 'http://localhost:8000/api/productos/' + id, { headers }); //llamada delete a apiProductos
+  }
+
+  engadirProducto(pProducto: Producto): Observable<any> {
+      const headers = this.getHeaders();
+  
+      return this.httpClient.post<any>( 'http://localhost:8000/api/productos', pProducto, { headers }); //llamada post a apiProductos pasando el producto en el cuerpo
+    }
+  
+    verDetalle(id: number) :Observable<any> {
+      const headers = this.getHeaders();
+  
+      return this.httpClient.get<any>( 'http://localhost:8000/api/productos/' + id, { headers });//llamada get a apiProductos
+    }
+  
+    editarProducto(id: number, producto: Producto) :Observable<any> {
+      const headers = this.getHeaders();
+  
+      return this.httpClient.put<any>( 'http://localhost:8000/api/productos/' + id, producto,  { headers }); //llamada put a apiProductos pasando el producto en el cuerpo
+    }
 }

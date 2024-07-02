@@ -1,6 +1,7 @@
 Usuarios: admin - abc123.. - administrador
 	  miguel - abc123.. - normal
 	  bali - abc123.. - normal
+	 
+Apunte: el usuario en la cabecera no pude hacerlo con input/output, porque los componentes cabecera y pie no son hijas, sino que el componente que va cambiando es el router-outlet que esta entre estos dos componentes, no encontré un modo de comunicar los componentes internos del router-outlet con los externos, cabecera y pie son los mismos durante toda la navegación, en su lugar hice un observable en el servicioLogin, de la variable usuarioLogeado al que le seteamos el valor cada vez que hacemos login, de manera que la cabecera está suscrita al observable, haciendo que este cambie segun el usuario logueado.
 
-
-Cambios del Leeme
+Creo recordar que nos dijiste que también valía hacerlo como observable.

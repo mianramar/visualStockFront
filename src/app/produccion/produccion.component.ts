@@ -1,104 +1,78 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Material } from '../modelos/material';
+import { MaterialProducto } from '../modelos/materialProducto';
 import { MaterialesService } from '../servicios/materiales.service';
-import { ProductosService } from '../servicios/productos.service';
 import { Producto } from '../modelos/producto';
-import { MenuComponent } from '../menu/menu.component';
+import { ProductosService } from '../servicios/productos.service';
 
 @Component({
   selector: 'app-produccion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MenuComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './produccion.component.html',
   styleUrl: './produccion.component.css'
 })
 export class ProduccionComponent implements OnInit{
 
-  formularioProduccion: FormGroup;
+  listaxeMaterials: MaterialProducto[]; //listado de materiales con relacion producto
+  mensajeError:string;
+  formSubmitted:boolean = false;
 
-   //Creamos el listado de materiales como un array de materiales
-  listaxeMateriales: Material[];
-  materialesSeleccionados: any[] = [];
-  materialesConsumidos: any[] = [];
-   // variables para mostrar los errores en el formulario
-   mensajeError:string;
 
-  constructor(private servizoMateriales: MaterialesService,
-    private direccionador: Router,
+  nuevoProducto: Producto = { //Inicializamos un nuevo producto
+    id: 0,
+    nombre: '',
+    tipo: 'intermedio',
+    cantidad_producida: 0,
+    tratamiento: '',
+    garantia: '',
+    materials: []
+  };
+
+  constructor(private direccionador: Router,
+    private servizoMateriales: MaterialesService,
     private servizoProductos: ProductosService) {
 
-this.elaborarFormulario();
-      /*this.formularioProduccion = new FormGroup({
-        nome: new FormControl(),
-        tipo: new FormControl(),
-        cantidad: new FormControl()
-      });*/
-    
+  }
+  consumir() {
+    this.formSubmitted = true;
+    // Filtrar los materiales seleccionados
+    const materialesSeleccionados = this.listaxeMaterials.filter(material => material.seleccionado && material.cantidad_consumida > 0);
+  
+    // Validar que haya al menos un material seleccionado con cantidad mayor que 0
+    if (materialesSeleccionados.length === 0) {
+      this.mensajeError = "Debe seleccionar al menos un material con una cantidad consumida válida.";
+      return;
+    }
+  
+    this.nuevoProducto.materials = materialesSeleccionados; //Asignamos los materiales seleccionados al nuevo producto
+  
+    // Verificar que todos los campos del nuevo producto sean válidos
+    if (!this.nuevoProducto.nombre || !this.nuevoProducto.tipo || this.nuevoProducto.cantidad_producida <= 0 ||
+        (this.nuevoProducto.tipo === 'intermedio' && !this.nuevoProducto.tratamiento) ||
+        (this.nuevoProducto.tipo === 'terminado' && !this.nuevoProducto.garantia)) {
+          this.mensajeError = "Por favor, complete todos los campos requeridos para el nuevo producto.";
+      return;
+    }
+  
+    this.servizoProductos.engadirProducto(this.nuevoProducto).subscribe({ //llamamos a servizoProducto engadirProducto pasando la variable nuevoProducto
+      next: (respuesta) => {
+        window.alert("La producción se ha procesado correctamente");
+        this.direccionador.navigate(['/productos']);
+      },
+      error: (error) => {
+        window.alert("Ha ocurrido un error al procesar el nuevo producto");
+      }
+    });
   }
 
-  elaborarFormulario():void{
-    /*this.formularioProduccion = this.elaborador.group({
-    nombre : ['', Validators.required]
-    });*/
-  }
   ngOnInit(): void {
-    this.servizoMateriales.getMateriales$().subscribe((materiales) => {
-      this.listaxeMateriales = materiales;
-    })
+    this.servizoMateriales.getMateriales$().subscribe((materials) => { //cargamos el listado de materiales
+      this.listaxeMaterials = materials;
+    });
   }
 
-
-  toggleMaterialSeleccionado(material: any) {
-    const index = this.materialesSeleccionados.findIndex(mat => mat.id === material.id);
-    if (index === -1) {
-      this.materialesSeleccionados.push(material);
-    } else {
-      this.materialesSeleccionados.splice(index, 1);
-    }
-  }
-
-  estaSeleccionado(material: any): boolean {
-    return this.materialesSeleccionados.some(mat => mat.id === material.id);
-  }
-
-  // Método para guardar un nuevo producto
-  nuevoProducto(pProducto: Producto){
-    this.mensajeError = this.servizoProductos.engadirProducto(pProducto);
-    if(this.mensajeError == null) { // Si no hay errores volvemos a almacén
-      this.direccionador.navigate(['/almacen','productos']); 
-    }
-  }
-
-  consumir(formulario: HTMLFormElement){ 
-
-    const nombre = (formulario.elements.namedItem('nombre') as HTMLInputElement).value;
-    const tipo = (formulario.elements.namedItem('tipo') as HTMLInputElement).value;
-    const cantidad = (formulario.elements.namedItem('cantidad') as HTMLInputElement).value;
-
-    console.log(this.materialesSeleccionados);
-    for (const material of this.materialesSeleccionados) {
-      const campoCantidad = 'cantidad' + material.id;
-      const materialConsumido = (formulario.elements.namedItem(campoCantidad) as HTMLInputElement).value;
-      this.materialesConsumidos.push({id: material.id, cantidad_consumida: materialConsumido });
-    }
-
-    const pProducto: Producto = {
-      id: 0,
-      nombre: nombre,
-      fecha_alta: new Date().toDateString(),
-      tipo: tipo,
-      cantidad_disponible: parseInt(cantidad),
-      materiales: this.materialesSeleccionados
-    };
-
-    this.nuevoProducto(pProducto);
-
-  }
-
-  navegarPortada() { // Funcionalidad del botón para redireccionar a Almacén
-    this.direccionador.navigate(['/portada']); 
-  }
 }

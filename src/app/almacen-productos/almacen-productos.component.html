@@ -1,32 +1,121 @@
-<app-menu [selector]="'A'" style="display: flex; justify-content: center; align-items: center;"></app-menu> <!--Para el input de menucomponent-->
 <div id="almacen">
     <div id="almacentitulo">
+        <h2>Almacén de Productos</h2>
         <div id="botones"> <!-- Botones de navegación -->
-            <button  (click) = "navegarMateriales()">Ver Almacén de Materiales</button>
-            <button (click) = "navegarPortada()">Volver a Portada</button>
+            <button  (click) = "navegarMateriales()">Ver Materiales</button>
+            <button type="button"  (click) = "navegarProduccion()">
+                Nuevo Producto
+              </button>
         </div>
-        <div id="tablaalmacenProductos">
-            <!-- Tabla de materiales -->
-            <table > 
-                <thead>
-                    <tr class="lineaTabla"> <!-- cabeceras -->
-                        <th>ID</th>
-                        <th>Producto</th>
-                        <th>Fecha Alta</th>
-                        <th>Tipo</th>
-                        <th>Cantidad Disponible</th>
-                    </tr>
-                </thead>
-                <tbody>  
-                    <tr class="lineaTabla" *ngFor="let producto of listaxeProductos">  <!--una fila por cada producto -->
-                        <td>{{ producto.id }}</td>
-                        <td>{{ producto.nombre }}</td>
-                        <td>{{ producto.fecha_alta | date : 'dd/MM/yyyy'}}</td> <!-- Para que nos lo de en el formato requetrido -->
-                        <td>{{ producto.tipo }}</td>
-                        <td>{{ producto.cantidad_disponible }}</td>
-                    </tr>
-                </tbody>  
-            </table>
+        <div class="row">
+            <div [ngClass]="{'col-md-12': mostrarProductos, 'col-md-8': !mostrarProductos, 'transicion-detalle': true}">
+                <div id="tablaalmacenProductos" class="contenedor-tabla">
+                    <!-- Tabla de productos -->
+                    <table class="table table-striped"> 
+                        <thead>
+                            <tr > <!-- headers -->
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Cantidad disponible</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>  
+                            <tr *ngFor="let producto of listaxeProductos">  <!--una fila por cada producto -->
+                                <td>{{ producto.nombre }}</td>
+                                <td>{{ producto.tipo }}</td>
+                                <td>{{ producto.cantidad_disponible}}</td>
+                                <td>
+                                    <button class="button-secondary" (click)="verDetalleProducto(producto.id)">Ver detalle</button>
+                                    <button class="button-secondary" (click)="eliminarProducto(producto.id)">Deshacer producción</button>
+                                </td>
+                            </tr>
+                        </tbody>  
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-4" *ngIf="mostrarDetalle">
+                <div id="contenedorFormularioProductos" >  
+            
+                    <form #productoForm="ngForm"> <!-- Referencia para validar en editarProducto -->
+                        <h1>Detalle Producto</h1>
+                        <div id="campos">
+                            <!-- Mensaje de error general -->
+                            <div *ngIf="mensajeError != null" style="color:red">
+                                <p>{{ mensajeError }}</p>
+                            </div>
+                            <!-- Campo nombre -->
+                            <div class="form-group">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" [(ngModel)]="productoSeleccionado.nombre" name="nombre" [disabled]="!editar" required #nombre="ngModel">
+                                <div *ngIf="nombre.invalid && nombre.touched" style="color:red"> <!--mensaje error de validacion del campo-->
+                                    El nombre es requerido.
+                                </div>
+                            </div>
+                            <!-- Campo tipo -->
+                            <div class="form-group">
+                                <label for="tipo">Tipo:</label>
+                                <select [(ngModel)]="productoSeleccionado.tipo" name="tipo" [disabled]="!editar" required #tipo="ngModel">
+                                    <option value="terminado">Terminado</option>
+                                    <option value="intermedio">Intermedio</option>
+                                </select>
+                                <div *ngIf="tipo.invalid && tipo.touched" style="color:red"><!--mensaje error de validacion del campo-->
+                                    El tipo es requerido.
+                                </div>
+                            </div>
+                            <!-- Campo cantidad disponible -->
+                            <div class="form-group">
+                                <label for="cantidad_disponible">Cantidad disponible:</label>
+                                <input type="text" [(ngModel)]="productoSeleccionado.cantidad_disponible" name="cantidad_disponible" disabled>
+                            </div>
+                            <!-- Campo adicional (Tratamiento/Garantía) -->
+                            <div class="form-group" *ngIf="productoSeleccionado.tipo == 'intermedio'">
+                                <label for="tratamiento">Tratamiento:</label>
+                                <input type="text" [(ngModel)]="productoSeleccionado.adicional" name="tratamiento" [disabled]="!editar" required #adicional="ngModel">
+                                <div *ngIf="adicional.invalid && adicional.touched" style="color:red"><!--mensaje error de validacion del campo-->
+                                    El tratamiento es requerido.
+                                </div>
+                            </div>
+                            <div class="form-group" *ngIf="productoSeleccionado.tipo == 'terminado'">
+                                <label for="garantia">Garantía:</label>
+                                <input type="text" [(ngModel)]="productoSeleccionado.adicional" name="garantia" [disabled]="!editar" required #adicional="ngModel">
+                                <div *ngIf="adicional.invalid && adicional.touched" style="color:red"><!--mensaje error de validacion del campo-->
+                                    La garantía es requerida.
+                                </div>
+                            </div>
+                            <!-- Listado de materiales -->
+                            <div class="contenedor-tabla">
+                                <h3>Materiales</h3>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Metal</th>
+                                            <th>Dimensiones</th>
+                                            <th>Cantidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let material of productoSeleccionado.materiales">
+                                            <td>{{ material.metal }}</td>
+                                            <td>{{ material.dimensiones }}</td>
+                                            <td>
+                                                <input type="text" [id]="'cantidad-' + material.id" [(ngModel)]="material.pivot.cantidad_consumida" name="cantidad-{{material.id}}" disabled class="input-materiales">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Botones de acción -->
+                        <div class="form-group">
+                            <button type="button" *ngIf="!editar" (click)="editarOn()">Editar</button>
+                            <button type="button" *ngIf="editar" (click)="editarProducto(productoForm, productoSeleccionado.id)">Guardar</button>
+                            <button type="button" (click)="cancelar()">Cancelar</button>
+                        </div>
+                    </form>            
+                </div>  
+            </div>
+
         </div>
     </div>
 

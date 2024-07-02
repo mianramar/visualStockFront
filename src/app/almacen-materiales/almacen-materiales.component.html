@@ -1,32 +1,119 @@
-<app-menu [selector]="'A'" style="display: flex; justify-content: center; align-items: center;"></app-menu><!--Para el input de menucomponent-->
 <div id="almacen">
     <div id="almacentitulo">
+        <h2>Almacén de materiales</h2>
         <div id="botones"> <!-- Botones de navegación -->
-            <button  (click) = "navegarProductos()">Ver Almacén de Productos</button>
-            <button (click) = "navegarPortada()">Volver a Portada</button>
+            <button  (click) = "navegarProductos()">Ver Productos</button>
+            <!-- Boton para abrir modal de nuevo material -->
+    <button type="button"  data-toggle="modal" data-target="#modalNuevoMaterial">
+    Nuevo Material
+  </button>
+  
+    <!-- Modal nuevo material-->
+    <div class="modal fade" id="modalNuevoMaterial" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Registrar nuevo Material</h5><!--titulo modal-->
+            <button type="button" class="close-btn" data-dismiss="modal" aria-label="Close" id="cerrarModal"><!--boton para cerrar el modal-->
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="materialForm" (ngSubmit)="nuevoMaterial()">
+                    <div *ngIf="mensajeError != null && formSubmitted" style="color:red"><!-- Si hay algun error, mostramos el mensaje en rojo-->
+                        <p>{{ mensajeError }}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="metal">Metal:</label>
+                        <input type="text" id="metal" formControlName="metal" class="form-control"><!--validacion-->
+                        <div *ngIf="materialForm.get('metal').invalid && (materialForm.get('metal').touched || formSubmitted)">
+                            <small *ngIf="materialForm.get('metal').errors?.['required']" style="color:red">El metal es requerido.</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dimensiones">Dimensiones:</label>
+                        <input type="text" id="dimensiones" formControlName="dimensiones" class="form-control"><!--validacion-->
+                        <div *ngIf="materialForm.get('dimensiones').invalid && (materialForm.get('dimensiones').touched || formSubmitted)" style="color:red">
+                            <small *ngIf="materialForm.get('dimensiones').errors?.['required']" >Las dimensiones son requeridas.</small>
+                            <small *ngIf="materialForm.get('dimensiones').errors?.['pattern']">Debe contener exactamente dos 'x'.</small>
+                        </div>
+                    </div>
+                    <button type="submit" >Registrar Material</button>
+                  </form>
+            </div>
         </div>
-        <div id="tablaalmacen">
-            <!-- Tabla de materiales -->
-            <table > 
-                <thead>
-                    <tr class="lineaTabla"> <!-- headers -->
-                        <th>ID</th>
-                        <th>Material</th>
-                        <th>Fecha Entrada</th>
-                        <th>Dimensiones</th>
-                        <th>Cantidad Disponible</th>
-                    </tr>
-                </thead>
-                <tbody>  
-                    <tr class="lineaTabla" *ngFor="let material of listaxeMateriales">  <!--una fila por cada material -->
-                        <td>{{ material.id }}</td>
-                        <td>{{ material.metal }}</td>
-                        <td>{{ material.fecha_entrada }}</td>
-                        <td>{{ material.dimensiones }}</td>
-                        <td>{{ material.cantidad_disponible }}</td>
-                    </tr>
-                </tbody>  
-            </table>
+        </div>
+    </div>
+
+        <!-- Modal Editar-->
+        <div class="modal fade" id="modalEditMaterial" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar Material</h5>
+                <button type="button" class="close-btn" data-dismiss="modal" aria-label="Close" id="cerrarModalEdit">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="materialEditForm" (ngSubmit)="editarMaterial()">
+                        <div *ngIf="mensajeError != null && formEditSubmitted" style="color:red"><!-- Si hay algun error, mostramos el mensaje en rojo-->
+                            <p>{{ mensajeError }}</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="metal">Metal:</label>
+                            <input type="text" id="metal" formControlName="metal" class="form-control"><!--validacion-->
+                            <div *ngIf="materialEditForm.get('metal').invalid && (materialEditForm.get('metal').touched || formSubmitted)">
+                                <small *ngIf="materialEditForm.get('metal').errors?.['required']" style="color:red">El metal es requerido.</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dimensiones">Dimensiones:</label>
+                            <input type="text" id="dimensiones" formControlName="dimensiones" class="form-control"><!--validacion-->
+                            <div *ngIf="materialEditForm.get('dimensiones').invalid && (materialEditForm.get('dimensiones').touched || formSubmitted)" style="color:red">
+                                <small *ngIf="materialEditForm.get('dimensiones').errors?.['required']" >Las dimensiones son requeridas.</small>
+                                <small *ngIf="materialEditForm.get('dimensiones').errors?.['pattern']">Debe contener exactamente dos 'x'.</small>
+                            </div>
+                        </div>
+                        <button type="submit" >Guardar Material</button>
+                      </form>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="tablaalmacen">
+                    <!-- Tabla de materiales -->
+                    <table class="table table-striped"> 
+                        <thead>
+                            <tr class="lineaTabla"> <!-- headers -->
+                                <th>Email del usuario</th>
+                                <th>Metal</th>
+                                <th>Dimensiones</th>
+                                <th>Cantidad disponible</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>  
+                            <tr class="lineaTabla" *ngFor="let material of listaxeMateriales">  <!--una fila por cada material -->
+                                <td>{{ material.usuario_email }}</td>
+                                <td>{{ material.metal }}</td>
+                                <td>{{ material.dimensiones }}</td>
+                                <td>{{ material.cantidad_disponible }}</td>
+                                <td>
+                                    <button class="button-secondary" (click)="escogerMaterial(material.id)" data-toggle="modal" data-target="#modalEditMaterial">Editar</button><!--abrimos modal editar-->
+                                    <button class="button-secondary" (click)="eliminarMaterial(material.id)">Eliminar</button>
+                                </td>
+                            </tr>
+                        </tbody>  
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 

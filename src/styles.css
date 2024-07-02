@@ -1,9 +1,16 @@
+@import 'bootstrap.min.css';
 /* You can add global styles to this file, and also import other style files */
 html, body {
     margin:0;
     height: 100%;
     overflow-x: hidden;
     width: 100vw;
+    background-color: rgb(253, 203, 110);
+}
+
+
+button {
+    margin: 10px;
 }
 
 #contenedorXeral{
@@ -13,17 +20,9 @@ html, body {
 }
 
 #contenedorCabecera {
-    width: 100%;
     background-color: black;
     color:rgb(253, 203, 110);
-    padding: 5px;
-    padding-left: 50px;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-weight: bold;
-    letter-spacing: 2px;
-    height: 75px;
-    padding-top: 0;
-    
 }
 
 #cab1 {
@@ -37,12 +36,8 @@ h2 {
 }
 
 #contenedorContenido {
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(253, 203, 110);
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 #contenedorPie {
@@ -76,7 +71,7 @@ h2 {
     align-items: center;
     gap:50px;
     height: 100%;
-    
+    margin-top: 5%;
 }
 
 /* parametros para todos los elementos de esta clase, que serán los botones de selección del departamento */
@@ -105,4 +100,25 @@ h2 {
     padding:8px;
     border:1px solid black;
     border-radius: 8px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgb(250, 242, 227);/* Sobreescribir el color de bootstrap para las tablas */
+}
+
+input:disabled {
+    background-color: #e0e0e0; /* Cambia este color al que prefieras */
+    box-shadow: none; /* Elimina cualquier sombra */
+    border: 1px solid #cccccc; /* Ajusta el color del borde si es necesario */
+    outline: none; /* Elimina el contorno que puede aparecer en algunos navegadores */
+}
+
+.contenedor-tabla {
+    overflow-y: scroll;
+    max-height: 450px;
+    text-align: center;
+}
+
+.close-btn{
+    width: 50px !important;
 }

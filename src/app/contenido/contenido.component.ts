@@ -21,27 +21,18 @@ export class ContenidoComponent implements OnInit{
   usuarioParseado: any;
 
   //Pasamos como parametro el servicio para poder utilizarlo en el constructor
-  constructor( private servizoJson : ContenidoDataService, private direccionador: Router){
+  constructor( private direccionador: Router){
 
     //Inicializamos nuestra variable datos con la variable datos del servicio (la que ya tiene cargada los datos del json)
-    this.servizoJson.getDepartamentos$().subscribe((datos) => {
-      this.datos = datos;
-    }); // Facemos que o array datos sexa permanentemente igual ao array de departamentos que hai no servizo mediante unha suscripción
- 
+
   }
 
-  // Al cargar la página
   ngOnInit(): void {
-    const usuarioRecuperado = window.sessionStorage.getItem('usuario'); // Recuperamos el usuario logueado
-    this.usuarioParseado = JSON.parse(usuarioRecuperado); // Lo "parseamos" para poder trabajar con sus atributos 
-  }
-
-  navegarAdministracion() { // Funcionalidad del botón para redireccionar a Administracion
-    this.direccionador.navigate(['/administracion']); 
+   
   }
 
   navegarAlmacen() { // Funcionalidad del botón para redireccionar a Almacén
-    this.direccionador.navigate(['/almacen','materiales']); 
+    this.direccionador.navigate(['/almacen']); 
   }
 
   navegarEntradas() { // Funcionalidad del botón para redireccionar a Entradas
@@ -55,4 +46,5 @@ export class ContenidoComponent implements OnInit{
   navegarSalidas() { // Funcionalidad del botón para redireccionar a Salidas
     this.direccionador.navigate(['/salidas']); 
   }
+
 }

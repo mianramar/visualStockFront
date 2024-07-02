@@ -1,10 +1,51 @@
 <!-- La cabecera solo estará formada por el titulo, un subtitulo y el usuario que mostrará el usuario logueado -->
-<div id='cab1'>
-    <h1>VISUAL STOCK -</h1>
-    <h2>Gestión de Almacenes</h2>
+<div class="row" >
+    <div class="col-md-10" id="contenedorCabecera">
+        <h1>VISUAL STOCK - Gestión de Almacenes</h1><!--Titulo de la aplicacion-->
+    </div>
+    <div class="col-md-2" id="contenedorDerecho">
+        <div>
+            <span *ngIf="usuarioCabecera.email && usuarioCabecera.email!= '' ">Usuario: {{ usuarioCabecera.email }}</span><!--Mostramos email del usuario conectado-->
+        </div>
+        <div id="botonesCabecera">
+            <button id="logout" (click) = "verPerfil()">Ver Perfil</button> <!--ver perfil del usuario conectado-->
+            <button id="logout" (click) = "desconectar()">Desconectar</button><!--logout del usuario-->
+        </div>
+    </div>
 </div>
-<div id='cab2' >
-    <span *ngIf="usuarioCabecera.usuario && usuarioCabecera.usuario!= '' ">usuario: {{ usuarioCabecera.usuario }}</span>
-    <button id="logout" (click) = "desconectar()">Desconectar</button>
+<div class="row">
+    <div class="col-md-12">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light"><!--barra de navegacion de bootstrap-->
+            <a class="navbar-brand" href="portada">Portada</a>
+            <div >
+              <ul class="navbar-nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="almacen" >Materiales <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="productos">Productos <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="entradas">Entradas <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="produccion">Producción <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="salidas">Salidas <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="aemet">AEMET <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item" *ngIf="usuarioCabecera && usuarioCabecera.rol === 'administrador'">
+                    <a class="nav-link" href="administracion">Administración <span class="sr-only">(current)</span></a><!--mostrar solo para admin-->
+                </li>
+                <li class="nav-item" *ngIf="usuarioCabecera && usuarioCabecera.rol === 'administrador'">
+                    <a class="nav-link" href="empresas">Empresas <span class="sr-only">(current)</span></a><!--mostrar solo para admin-->
+                </li>
+              </ul>
+            </div>
+          </nav>
+    </div>
 </div>
 

@@ -1,58 +1,97 @@
-<app-menu [selector]="'P'" style="display: flex; justify-content: center; align-items: center"></app-menu> <!--Para el input de menucomponent-->
-<div id="botones">
-    <button (click) = "navegarPortada()">Volver a Portada</button>
+<div id="div1">
+    <h2>Producción</h2>
 </div>
-<form #formularioProduccion id="formularioProduccion" >
-<div id="proceso">
-    <div id="consumo">
-        <h3>Materiales</h3>
-        <div id="tablaalmacen" >
-            <!-- Tabla de materiales -->
-            <table > 
+
+<div class="row">
+    <div class="col-md-8">
+        <div id="consumo" class="contenedor-tabla"> <!--Listado de materiales-->
+            <h3>Materiales</h3>
+            <table class="table table-striped">
                 <thead>
-                    <tr class="lineaTabla"> <!-- cabeceras -->
-                        <th></th>
-                        <th>ID</th>
+                    <tr>
+                        <th>Seleccionar</th>
                         <th>Metal</th>
-                        <th>Fecha Entrada</th>
                         <th>Dimensiones</th>
-                        <th>Cantidad</th>
+                        <th>Disponibilidad</th>
+                        <th>Cantidad Consumida</th>
                     </tr>
                 </thead>
-                <tbody>  
-                    <tr class="lineaTabla" *ngFor="let material of listaxeMateriales">  <!--una fila por cada material -->
-                        <td><input type="checkbox" [checked]="estaSeleccionado(material)" (change)="toggleMaterialSeleccionado(material)"></td>
-                        <td>{{ material.id }}</td>
+                <tbody>
+                    <tr *ngFor="let material of listaxeMaterials">
+                        <td><input type="checkbox" [(ngModel)]="material.seleccionado" name="seleccionado-{{material.id}}"></td>
                         <td>{{ material.metal }}</td>
-                        <td>{{ material.fecha_entrada }}</td>
                         <td>{{ material.dimensiones }}</td>
-                        <input type="text" class="controlFormulario cantidad" id="cantidad{{ material.id }}" name="cantidad{{ material.id }}">                    </tr>
-                </tbody>  
+                        <td>{{ material.cantidad_disponible }}</td>
+                        <td>
+                            <input type="number" [(ngModel)]="material.cantidad_consumida" name="cantidad-{{material.id}}" [disabled]="!material.seleccionado" min="1" required #cantidadConsumida="ngModel">
+                            <div *ngIf="material.seleccionado && cantidadConsumida.invalid && (cantidadConsumida.dirty || cantidadConsumida.touched)" style="color:red"><!--validaciones-->
+                                Cantidad requerida y debe ser mayor que 0.
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
-    <div id="flecha"><img src="assets/img/flecha.PNG" alt=""></div>
-    <div id="resultado">
-        <h3>Producto</h3>
-
-            <!-- Campo nome -->
-            <label for="nombre">Nombre:</label>
-            <input type="text" class="controlFormulario" id="nombre" name="nombre">
-            
-            <!-- Campo tipo -->
-            <label for="tipo">Tipo:</label>
-            <select class="controlFormulario" id="tipo" name="tipo">
-                <option value="Intermedio">Intermedio</option>
-                <option value="Terminado">Terminado</option>
-            </select>
+    <div class="col-md-1">
+        <div id="flecha"><img src="assets/img/flecha.PNG" alt="" style="margin-top: 20vh;"></div>
+    </div>
+    <div class="col-md-3">
+        <div id="resultado">
+            <h3>Nuevo Producto</h3>
+            <form #produccionForm="ngForm">
+                <!-- Campo nome -->
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" [(ngModel)]="nuevoProducto.nombre" name="nombre" required #nombre="ngModel">
+                    <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched || formSubmitted)" style="color:red"><!--validaciones-->
+                        El nombre es requerido.
+                    </div>
+                </div>
+                
+                <!-- Campo tipo -->
+                <div class="form-group">
+                    <label for="tipo">Tipo:</label>
+                    <select [(ngModel)]="nuevoProducto.tipo" name="tipo" required #tipo="ngModel">
+                        <option value="intermedio">Intermedio</option>
+                        <option value="terminado">Terminado</option>
+                    </select>
+                    <div *ngIf="tipo.invalid && (tipo.dirty || tipo.touched || formSubmitted)" style="color:red"><!--validaciones-->
+                        El tipo es requerido.
+                    </div>
+                </div>
     
-            <!-- Campo cantidad -->
-            <label for="cantidad">Cantidad:</label>
-            <input type="number" class="controlFormulario" id="cantidad" name="cantidad">
+                <!-- Campo cantidad -->
+                <div class="form-group">
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" [(ngModel)]="nuevoProducto.cantidad_producida" name="cantidad_producida" min="1" required #cantidadProducida="ngModel">
+                    <div *ngIf="cantidadProducida.invalid && (cantidadProducida.dirty || cantidadProducida.touched || formSubmitted)" style="color:red"><!--validaciones-->
+                        La cantidad es requerida y debe ser mayor que 0.
+                    </div>
+                </div>
     
-            <!-- Botón submit -->
-            <button type="button" id="procesar" (click)="consumir(formularioProduccion)">Procesar</button>
-
+                <div class="form-group" *ngIf="nuevoProducto.tipo === 'intermedio'">
+                    <!-- Campo TRATAMIENTO en INTERMEDIO -->
+                    <label for="tratamiento">Tratamiento:</label>
+                    <input type="text" [(ngModel)]="nuevoProducto.tratamiento" name="tratamiento" required #tratamiento="ngModel">
+                    <div *ngIf="tratamiento.invalid && (tratamiento.dirty || tratamiento.touched || formSubmitted)" style="color:red"><!--validaciones-->
+                        El tratamiento es requerido para productos intermedios.
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="nuevoProducto.tipo === 'terminado'">
+                    <!-- Campo GARANTIA en TERMINADO -->
+                    <label for="garantia">Garantía:</label>
+                    <input type="text" [(ngModel)]="nuevoProducto.garantia" name="garantia" required #garantia="ngModel">
+                    <div *ngIf="garantia.invalid && (garantia.dirty || garantia.touched || formSubmitted)" style="color:red"><!--validaciones-->
+                        La garantía es requerida para productos terminados.
+                    </div>
+                </div>
+                <!-- Botón submit -->
+                <button type="button" (click)="consumir()" >Procesar</button>
+                <div *ngIf="mensajeError != null" style="color:red"><!--validaciones-->
+                    <p>{{ mensajeError }}</p>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-</form>

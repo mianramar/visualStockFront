@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../modelos/usuario';
-import { LoginService } from '../servicios/servizo-login.service';
-import { FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormControl, ReactiveFormsModule, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { UsuariosService } from '../servicios/usuarios.service';
 
 @Component({
   selector: 'app-administracion',
@@ -20,64 +19,163 @@ export class AdministracionComponent implements OnInit{
   mostrarUsuarios=true;
   // variables para mostrar los errores en el formulario
   mensajeError:string;
-  // Creamos variable para guardar el nombre antiguo en caso de cambiarlo
-  nombreAntiguo='';
-  formularioUsuario: FormGroup; // Definimos o FormGroup asociado al formulario HTML
 
-  constructor(private servizoLogin: LoginService, private direccionador: Router) {
+  formularioUsuario: FormGroup; // Definimos o FormGroup asociado ao noso formulario HTML
+  formularioUsuarioEdit: FormGroup;
+  idUsuarioSeleccionado:number;
+  formSubmitted = false; // Bandera para rastrear si el formulario ha sido enviado
+  formEditSubmitted = false;
+
+  constructor( 
+    private servizoUsuarios: UsuariosService) { //Inicializamos los formularios con validaciones
     this.formularioUsuario = new FormGroup({
-      usuario: new FormControl(),
-      contrasinal: new FormControl(),
-      rol: new FormControl()
-    })
+      nombre: new FormControl('', [Validators.required]),
+      apellido: new FormControl('', [Validators.required]),
+      rol: new FormControl('', [Validators.required]),
+      name: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required]),
+      confirmPassword: new FormControl('', [Validators.required])
+    }, { validators: this.passwordsMatchValidator });
+
+    this.formularioUsuarioEdit = new FormGroup({
+      nombre: new FormControl('', [Validators.required]),
+      apellido: new FormControl('', [Validators.required]),
+      rol: new FormControl('', [Validators.required]),
+      name: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email])
+    });
   }
 
-  // Este método execútase cando a compoñente está lista para ser cargada. Vainos permitir suscribirnos aos cambios do array de módulos que hai no servizo
+    // Validación para verificar que las contraseñas coinciden
+    passwordsMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
+      const password = control.get('password');
+      const confirmPassword = control.get('confirmPassword');
+      if (password && confirmPassword && password.value !== confirmPassword.value) {
+        return { 'passwordMismatch': true };
+      }
+      return null;
+    }
+
+  // Este método execútase cando a compoñente está lista para ser cargada.
   ngOnInit(): void {
-    this.servizoLogin.getUsuarios$().subscribe((usuarios) => {
+    this.cargarUsuarios();
+  }
+
+  cargarUsuarios() { // Llammamos a servizoUsuarios para obtener el listado de usuarios que guardamos en listaxeUsuarios
+    this.servizoUsuarios.getUsuarios$().subscribe((usuarios) => {
+      console.log(usuarios);
       this.listaxeUsuarios = usuarios;
-    }); // Facemos que o array listaxeUsuarios sexa permanentemente igual ao array de usuarios que hai no servizo mediante unha suscripción
+    });
   }
 
   // Método para borrar usuario
-  borrarUsuario(usuario: Usuario){
-    this.servizoLogin.borrarUsuario(usuario);
+  borrarUsuario(id: number){
+    const confirmacion = window.confirm('¿Está seguro de que quiere eliminar el usuario?');//Confirmacion para eliminar
+    if (confirmacion) {
+      this.servizoUsuarios.eliminarUsuario(id).subscribe({//Llamamos a servizoUsuarios para eliminar el usuario pasando el id
+        next: (respuesta) => {
+          if (respuesta && respuesta.error) {
+            // Si la respuesta contiene un campo error, mostrar un alert
+            window.alert('Error: ' + respuesta.error);
+          } else if (respuesta) {
+            //Eliminamos el usuario de la lista local
+            this.listaxeUsuarios = this.listaxeUsuarios.filter(usuario => usuario.id !== id);
+            window.alert(respuesta.mensaje);
+          }
+        },
+        error: (error) => {
+          // Mostramos el error
+          window.alert(error.error.mensaje);
+        }
+      });
+    }
   }
 
   // Método para guardar un nuevo usuario
   nuevoUsuario(){
-    this.mensajeError = this.servizoLogin.engadirUsuario(this.formularioUsuario.value);
-    if(this.mensajeError == null) { // Si no hay errores volvemos a la tabla de usuarios
-      this.mostrarUsuarios = !this.mostrarUsuarios;
+    this.formSubmitted = true; // Marcar que el formulario ha sido enviado
+
+    if (this.formularioUsuario.valid) { //Si el formulario es valido
+      const formData = this.formularioUsuario.value;
+      console.log(formData);
+       this.servizoUsuarios.engadirUsuario(formData).subscribe({ // Llamamos a servizoUsuarios para añadir un nuevousuario pasando como parametro los valores del formulario
+        next: (respuesta) => {
+            window.alert("El usuario se ha creado correctamente");
+            this.cargarUsuarios();//Volvemos a cargar el listado de usuarios
+            this.cerrarModal();//Cerramos el modal de usuario
+            this.formSubmitted = false;
+            this.formularioUsuario.reset(); //Reseteamos el formulario de nuevo usuario
+        },
+        error: (error) => {
+          console.log(error);
+          // Mostramos el error
+          window.alert(error.error.errors);
+          this.cerrarModal();
+          this.formSubmitted = false;
+        }
+      });
+    } else {
+      this.mensajeError = 'Por favor, corrija los errores en el formulario.';
     }
   }
 
-  // Método para guardar los cambios de un usuario
-  modificarUsuario(){
-    this.servizoLogin.modificarUsuario(this.formularioUsuario.value, this.nombreAntiguo);
-    this.mostrarUsuarios = !this.mostrarUsuarios;
+  escogerUsuario(id:number){ //Llamamos a este método cuando pulsamos en editar en el listado
+
+    this.idUsuarioSeleccionado = id; //Guardamos su id
+    this.servizoUsuarios.getUsuario$(id).subscribe((usuarioSeleccionado) => { //Llamamos al servizoUsuario getusuario para obtener los detalles del usuario
+      if (usuarioSeleccionado) {
+        this.formularioUsuarioEdit.patchValue({ // Seteamos el formulario con los campos del usuario recuperado
+          nombre: usuarioSeleccionado.perfil.nombre,
+          apellido: usuarioSeleccionado.perfil.apellido,
+          rol: usuarioSeleccionado.rol,
+          name: usuarioSeleccionado.name,
+          email: usuarioSeleccionado.email
+        });
+      }
+    });
+
+
   }
 
-  // Método para mostrar el formulario de editar y ocultar la tabla de todos los usuarios
-  mostrarFormularioEditar(usuario: Usuario){
-    this.editar = true;
-    this.mostrarUsuarios = false;
-    // Recuperamos los datos del usuario seleccionado
-    this.formularioUsuario.get('usuario').setValue(usuario.usuario);
-    this.formularioUsuario.get('contrasinal').setValue(usuario.contrasinal);
-    this.formularioUsuario.get('rol').setValue(usuario.rol);
-    // Tenemos que guardar el nombre original, por si cambiamos este parámetro, poder encontrarlo en usuarios (ya que lo buscamos por este parámetro)
-    this.nombreAntiguo = usuario.usuario;
+  cerrarModal(): void {
+    let botonCerrar:HTMLElement= document.getElementById('cerrarModal') as HTMLElement;
+    //Simulamos el click del boton cerrar
+    botonCerrar.click();
   }
 
-  // Método para mostrar el formulario para crear un nuevo usuario
-  mostrarFormularioCrear(){
-    this.editar = false;
-    this.formularioUsuario.reset(); // reseteamos el form, para eliminar datos anteriores
-    this.mostrarUsuarios = false;
+  cerrarModalEdit(): void {
+    let botonCerrar:HTMLElement= document.getElementById('cerrarModalEdit') as HTMLElement;
+    //Simulamos el click del boton cerrar
+    this.formEditSubmitted = false; // Marcar que el formulario ha sido enviado
+
+    botonCerrar.click();
   }
 
-  navegarPortada() { // Funcionalidad del botón para redireccionar a Almacén
-    this.direccionador.navigate(['/portada']); 
+
+  editarUsuario() {
+    this.formEditSubmitted = true; // Marcar que el formulario ha sido enviado
+
+    const formData = this.formularioUsuarioEdit.value;
+
+    if (this.formularioUsuarioEdit.valid) {
+    this.servizoUsuarios.editarUsuario(this.idUsuarioSeleccionado, formData).subscribe({ //Llamamos a servizoUsuarios editarusuario pasando el id seleccionado previamente en escoger usuario y el formulario
+      next: (respuesta) => {
+          window.alert("El usuario se ha modificado correctamente");
+          this.cargarUsuarios(); //Volvemos a cargar usuario y cerramos el modal
+          this.cerrarModalEdit();
+          
+      },
+      error: (error) => {
+        // Mostramos el error
+        window.alert(error.error.errors);
+        this.cerrarModalEdit();
+      }
+    });
+  } else {
+    this.mensajeError = 'Por favor, corrija los errores en el formulario.';
   }
+
+  }
+
 }

@@ -1,15 +1,11 @@
-#tablaalmacenProductos { /*table productos*/
-    overflow-y: scroll;
-    max-height: 450px;
-    min-width: 500px;
-    text-align: center;
+#tablaalmacenProductos {
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
     background-color: rgb(255, 255, 255);
-    color: grey;
+    max-height: 60vh;
 }
 
-button { /*botones*/
+button {
     background-color: black;
     color: rgb(253, 203, 110);
     border-radius: 12px;
@@ -17,26 +13,20 @@ button { /*botones*/
     height:25px;
     width: 200px;
     font-weight: bold;
-    cursor: pointer; /*para cambiar el cursor*/
+    cursor: pointer;
 }
 
 th,td {
-    padding: 5px; /*espaciado casillas*/
+    padding: 5px;
 }
 
-#botones { /*contenedor de los botones*/
+#botones {
     display:flex;
     flex-direction: row;
     gap: 10px;
     margin: 10px;
-    justify-content: space-between; /*para que queden lo mas separados posible*/
 }
 
-#almacen {
-    width: 90%;
-    min-width: 400px;
-    height: 50%;   
-}
 
 th {
     border-bottom: 2px solid rgb(253, 203, 110);
@@ -47,4 +37,39 @@ h2 {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-weight: bold;
     text-align: center;
+}
+
+.button-secondary {
+    background-color: rgb(253, 203, 110);
+    color: black;
+    border-radius: 12px;
+    border:none;
+    height:25px;
+    width: 200px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.input-materiales {
+    width: 60%;
+}
+
+input {
+    margin: 0.5%;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.transicion-detalle {
+    transition: all 0.5s ease;
+  }
+
+  #contenedorFormularioProductos {
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    background-color: rgb(255, 255, 255);
+    padding: 30px
 }

@@ -1,0 +1,93 @@
+<div id="nuevoSaldia">
+    <h2>Registrar albarán de SALIDA</h2>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <!-- Tabla de salidass -->
+        <div id="tablaNuevaSalida" >
+            <form #salidaForm="ngForm">
+                <div id="campos">
+                    <!-- Campo numero -->
+                    <div id="filacampos">
+                        <div class="form-group">
+                            <label for="numero">Numero Albarán:</label>
+                            <input type="text" [(ngModel)]="salidaSeleccionada.numero" name="numero" required #numero="ngModel">
+                            <div *ngIf="numero.invalid && (numero.dirty || numero.touched)" style="color:red"><!--validaciones-->
+                                El número de albarán es requerido.
+                            </div>
+                        </div>
+                        <!-- Campo empresa -->
+                        <div class="form-group">
+                            <label for="empresa_nome">Empresa:</label>
+                            <select [(ngModel)]="salidaSeleccionada.empresa_id" name="empresa_id" required #empresa_id="ngModel">
+                                <option *ngFor="let empresa of listaxeEmpresas" [value]="empresa.id">{{ empresa.nombre }}</option>
+                            </select>
+                            <div *ngIf="empresa_id.invalid && (empresa_id.dirty || empresa_id.touched)" style="color:red"><!--validaciones-->
+                                La empresa es requerida.
+                            </div>
+                        </div>
+                        <!-- Campo fecha -->
+                        <div class="form-group">
+                            <label for="fecha">Fecha:</label>
+                            <input type="date" [(ngModel)]="salidaSeleccionada.fecha" name="fecha" required #fecha="ngModel">
+                            <div *ngIf="fecha.invalid && (fecha.dirty || fecha.touched)" style="color:red"><!--validaciones-->
+                                La fecha es requerida.
+                            </div>
+                        </div>
+                        <!-- Campo tipo -->
+                        <div class="form-group">
+                            <label for="tipo">Tipo de operación:</label>
+                            <input type="text" value="salida" disabled>
+                        </div>
+                    </div>
+            
+                    <!-- Tabla de productos -->
+                    <div class="contenedor-tabla">
+                        <h3>Productos</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Seleccionar</th>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Disponibilidad</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let producto of listaxeProductos">
+                                    <td><input type="checkbox" [(ngModel)]="producto.seleccionado" name="seleccionado-{{producto.id}}"></td>
+                                    <td>{{ producto.nombre }}</td>
+                                    <td>{{ producto.tipo }}</td>
+                                    <td>{{ producto.cantidad_disponible }}</td>
+                                    <td>
+                                        <input type="number" [(ngModel)]="producto.cantidad" name="cantidad-{{producto.id}}" [disabled]="!producto.seleccionado" required #cantidad="ngModel" min="1">
+                                        <div *ngIf="producto.seleccionado && cantidad.invalid && (cantidad.dirty || cantidad.touched)" style="color:red"><!--validaciones-->
+                                            La cantidad es requerida y debe ser mayor que 0.
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="number" [(ngModel)]="producto.precio" name="precio-{{producto.id}}" [disabled]="!producto.seleccionado" required #precio="ngModel" min="0.01" step="0.01">
+                                        <div *ngIf="producto.seleccionado && precio.invalid && (precio.dirty || precio.touched)" style="color:red"><!--validaciones-->
+                                            El precio es requerido y debe ser mayor que 0.
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Botón submit -->
+                <div class="row">
+                    <div class="class-md-4">
+                        <button type="button" (click)="guardarSalida(salidaForm)">Guardar</button>
+                        <div *ngIf="mensajeError != null" style="color:red"><!--validaciones-->
+                            <p>{{ mensajeError }}</p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

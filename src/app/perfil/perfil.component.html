@@ -1,0 +1,70 @@
+<h2>Mi perfil</h2>
+
+<div class="row" id="contenedorFormularioUsuarios">
+    <div class="col-md-8">
+            <form [formGroup]="formularioUsuario" (ngSubmit)="editarUsuario()" id="formUsuario"> 
+        
+                <div *ngIf="mensajeError != null && formSubmitted" style="color:red"><!-- Mensaje de error en rojo en caso de que existieran -->
+                    <p>{{ mensajeError }}</p>
+                </div>
+                <!-- Nombre -->
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" class="controlFormulario" formControlName="nombre">
+                    <div *ngIf="(formSubmitted || formularioUsuario.get('nombre').dirty || formularioUsuario.get('nombre').touched) && formularioUsuario.get('nombre').invalid" style="color:red">
+                        <small *ngIf="formularioUsuario.get('nombre').errors?.['required']">Nombre es requerido.</small><!--Validaciones-->
+                    </div>
+                </div>
+
+                <!-- Apellidos -->
+                <div class="form-group">
+                    <label for="apellido">Apellidos:</label>
+                    <input type="text" class="controlFormulario" formControlName="apellido">
+                    <div *ngIf="formularioUsuario.get('apellido').invalid && (formularioUsuario.get('apellido').dirty || formularioUsuario.get('apellido').touched || formSubmitted)" style="color:red">
+                        <small *ngIf="formularioUsuario.get('apellido').errors?.['required']">Apellidos son requeridos.</small><!--Validaciones-->
+                    </div>
+                </div>
+            <!-- Nombre de usuario -->
+            <div class="form-group">
+                <label for="name">Nombre de usuario:</label>
+                <input type="text" class="controlFormulario" formControlName="name">
+                <div *ngIf="formularioUsuario.get('name').invalid && (formularioUsuario.get('name').dirty || formularioUsuario.get('name').touched || formSubmitted)" style="color:red">
+                    <small *ngIf="formularioUsuario.get('name').errors?.['required']">Nombre de usuario es requerido.</small><!--Validaciones-->
+                </div>
+            </div>
+                                <!-- Email -->
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="text" class="controlFormulario" formControlName="email">
+                    <div *ngIf="formularioUsuario.get('email').invalid && (formularioUsuario.get('email').dirty || formularioUsuario.get('email').touched  || formSubmitted)" style="color:red">
+                        <div *ngIf="formularioUsuario.get('email').errors?.['required']">Email es requerido.</div>
+                        <small *ngIf="formularioUsuario.get('email').errors?.['email']">Email no es válido.</small><!--Validaciones-->
+                    </div>
+                </div>
+                <!-- Rol -->
+                <div class="form-group">
+                    <label for="rol">Rol:</label>
+                    <select class="controlFormulario" formControlName="rol">
+                        <option value="administrador">Admin</option>
+                        <option value="usuario" selected>Usuario</option>
+                    </select>
+                    <div *ngIf="formularioUsuario.get('rol').invalid && (formularioUsuario.get('rol').dirty || formularioUsuario.get('rol').touched  || formSubmitted)" style="color:red">
+                        <small *ngIf="formularioUsuario.get('rol').errors?.['required']">Rol es requerido.</small><!--Validaciones-->
+                    </div>
+                </div>
+           
+                <!-- Botón submit -->
+                <button type="submit">Guardar</button>
+            </form> 
+        
+    </div>
+    <div class="col-md-4">
+        <img src="{{rutaImagen}}" class="imagen"/>
+
+        <div>
+            <input type="file" (change)="onFileSelected($event)">
+            <button (click)="subirImagen()" style="width:200px">Cambiar Imagen</button>
+          </div>
+    </div>
+
+</div>

@@ -1,45 +1,65 @@
-#proceso { /*disposicion de los elementos del contenedor proceso*/
-    display:flex;
-    flex-direction: row;
-    gap: 3%;
-    margin-bottom: 8%;
-}
 
-#consumo { /*disposicion de los elementos del contenedor consumo*/
+
+#consumo {
     display:flex;
     flex-direction: column;
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
     background-color: rgb(255, 255, 255);
     color: grey;
-    min-height: 400px;
+    max-height: 60vh;
     padding:30px;
-    padding-top: 0px;
-    padding-bottom: 0px;
     text-align: center;
 }
 
-#resultado { /*disposicion de los elementos del contenedor resultado*/
+#resultado {
     display:flex;
     flex-direction: column;
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
     background-color: rgb(255, 255, 255);
-    color: grey;
-    min-height: 400px;
     padding:30px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    text-align: center;
+    color: grey;
 }
 
-#formularioProduccion { /*mostramos los elementos por columnas*/
+h2 {
+    margin-bottom: 3%;
+    text-align: center;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+}
+ h3{
+    text-align: center;
+ }
+
+input {
+    text-align: center;
+    
+    padding:5px;
+    margin-top: 5px;
+}
+
+#consumo > input {
+    text-align: center;
+    width: 80px;
+    padding:5px;
+    padding-left: 20px;
+    margin-top: 0px;
+}
+
+select {
+    text-align: center;
+    padding:5px;
+    margin-top: 5px;
+}
+
+#formularioProduccion {
     display:flex;
     flex-direction: column;
     align-items: center;
 }
 
-#flecha { /* contenedor de la flecha (imagen)*/
+#flecha {
     width: 100px;
     display:flex;
     align-items: center;
@@ -56,13 +76,13 @@ label {
     color:black;
 }
 
-button { /*botones genéricos*/
+button {
     height: 30px;
     width: 150px;
     font-weight: bold;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    background-color: white;
-    color: black;
+    background-color: black;
+    color: rgb(253, 203, 110);
     border-radius: 20px;
     border-style: none;
     margin-bottom: 10px;
@@ -77,62 +97,9 @@ img {
     background-color: rgb(255, 255, 255);
     color: grey;
 }
-#tablaalmacen {
-    overflow-y: scroll;
-    max-height: 450px;
-    text-align: center;
-    border-radius: 8px;
-    color: grey;
-}
 
-button { /*botones genéricos*/
-    background-color: black;
-    color: rgb(253, 203, 110);
-    border-radius: 12px;
-    border:none;
-    height:25px;
-    width: 200px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-th,td { /*êspaciado*/
-    padding: 5px;
-}
-
-#botones { /*contenedor de los botones*/
-    display:flex;
-    flex-direction: row;
-    margin: 10px;
-    justify-content: end;
-}
-
-#almacen {
-    width: 90%;
-    min-width: 400px;
-    height: 50%;
-}
-
-th {
-    border-bottom: 2px solid rgb(253, 203, 110);
-}
-
-h2 {
-    font-size: 2px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-weight: bold;
-    text-align: center;
-}
-
-.controlFormulario.cantidad{
-    width: 25%;
-}
-
-h3 {
-    margin:0;
-}
-
-form { 
-    max-height: 450px;
-    margin-bottom: 30px;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
 }

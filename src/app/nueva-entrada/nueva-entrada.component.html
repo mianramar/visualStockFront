@@ -1,0 +1,92 @@
+<div id="nuevoEntrada">
+    <h2>Registrar albarán de ENTRADA</h2>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <!-- Tabla de entradas -->
+        <div id="tablaNuevaEntrada" >
+            <form #entradaForm="ngForm"> <!-- Referencia del formulario para validación en guardarEntrada -->
+                <div id="campos">
+                    <div id="filacampos">
+                        <!-- Campo numero -->
+                        <div class="form-group">
+                            <label for="numero">Numero Albarán:</label>
+                            <input type="text" [(ngModel)]="entradaSeleccionada.numero" name="numero" required #numero="ngModel">
+                            <div *ngIf="numero.invalid && numero.touched" style="color:red"><!--Validaciones-->
+                                El número de albarán es requerido.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <!-- Campo empresa -->
+                            <label for="empresa_nome">Empresa:</label>
+                            <select [(ngModel)]="entradaSeleccionada.empresa_id" name="empresa_id" required #empresa_id="ngModel">
+                                <option *ngFor="let empresa of listaxeEmpresas" [value]="empresa.id">{{ empresa.nombre }}</option>
+                            </select>
+                            <div *ngIf="empresa_id.invalid && empresa_id.touched" style="color:red"><!--Validaciones-->
+                                La empresa es requerida.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <!-- Campo fecha -->
+                            <label for="fecha">Fecha:</label>
+                            <input type="date" [(ngModel)]="entradaSeleccionada.fecha" name="fecha" required #fecha="ngModel">
+                            <div *ngIf="fecha.invalid && fecha.touched" style="color:red"><!--Validaciones-->
+                                La fecha es requerida.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <!-- Campo tipo -->
+                            <label for="tipo">Tipo de operación:</label>
+                            <input type="text" value="entrada" disabled>
+                        </div>
+                    </div>
+    
+                    <!-- Tabla de materiales -->
+                    <div class="contenedor-tabla">
+                        <h3>Materiales</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Seleccionar</th>
+                                    <th>Metal</th>
+                                    <th>Dimensiones</th>
+                                    <th>Disponibilidad</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let material of listaxeMaterials">
+                                    <td><input type="checkbox" [(ngModel)]="material.seleccionado" name="seleccionado-{{material.id}}"></td>
+                                    <td>{{ material.metal }}</td>
+                                    <td>{{ material.dimensiones }}</td>
+                                    <td>{{ material.cantidad_disponible }}</td>
+                                    <td><input type="number" [(ngModel)]="material.cantidad" name="cantidad-{{material.id}}" [disabled]="!material.seleccionado" min="1" #cantidad="ngModel" required>
+                                        <div *ngIf="material.seleccionado && cantidad.invalid && cantidad.touched" style="color:red"><!--Validaciones-->
+                                            La cantidad es requerida y debe ser mayor que 0.
+                                        </div>
+                                    </td>
+                                    <td><input type="number" [(ngModel)]="material.precio" name="precio-{{material.id}}" [disabled]="!material.seleccionado" min="0.01" step="0.01" #precio="ngModel" required>
+                                        <div *ngIf="material.seleccionado && precio.invalid && precio.touched" style="color:red"><!--Validaciones-->
+                                            El precio es requerido y debe ser mayor que 0.
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Botón submit -->
+                <div class="row">
+                    <div class="class-md-4">
+                        <!-- Botón submit -->
+                        <button type="button" (click)="guardarEntrada(entradaForm)">Guardar</button>
+                        <div *ngIf="mensajeError != null" style="color:red"><!--mensaje de error de las validaciones-->
+                            <p>{{ mensajeError }}</p>
+                        </div>
+                    </div>
+                </div> 
+            </form> 
+        </div>
+    </div>
+</div>

@@ -1,12 +1,6 @@
-#cab2 { /*mostramos los elementos centrados*/
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    
-}
 
-#logout { /*para el boton de logout*/
+
+#logout {
     background-color: rgb(253, 203, 110);
     color: black;
     border-radius: 12px;
@@ -16,4 +10,26 @@
     font-weight: bold;
     cursor: pointer;
     margin-left: 30px;
+}
+
+#contenedorCabecera{
+    padding: 10px;
+    display: flex;
+    padding-left:30px;
+    align-items: center;
+}
+
+#contenedorDerecho{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap:10px;
+}
+
+#botonesCabecera {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:10px;
 }

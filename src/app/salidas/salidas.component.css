@@ -19,7 +19,7 @@ button {
     cursor: pointer;
 }
 
-#ne, #bportada {
+#ne {
     background-color: black;
     color: rgb(253, 203, 110);
 }
@@ -35,8 +35,8 @@ th,td {
 
 #botones {
     display:flex;
-    justify-content: space-between;
-    margin:10px;
+    gap: 10px;
+    margin: 10px;
 }
 
 #almacen {
@@ -77,10 +77,25 @@ h2 {
     padding: 30px
 }
 
-input {
-    margin: 10px;
+.input-productos {
+    width: 60%;
 }
 
-.isEliminado {
-    color:red;
+input {
+    margin: 0.5%;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.transicion-detalle {
+    transition: all 0.5s ease;
+  }
+
+#tablaProductos {
+    overflow-y: scroll;
+    max-height: 450px;
+    border-radius: 8px;
 }
